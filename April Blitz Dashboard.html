@@ -319,6 +319,15 @@ function renderRaceTrack(){
   const dayPct=Math.min(daysPassed/totalDays*100,100);
   const dayLabel=daysPassed>0&&daysPassed<totalDays?`Day ${daysPassed}`:"";
 
+  // Gate marker position (8 meetings at M1 value = 8 pts minimum on the scale)
+  const aeGatePts=settings.aeGate*settings.m1Pts;
+  const aeGatePct=Math.min(aeGatePts/trackMax*100,100);
+  const sdrGatePts=settings.sdrGate*settings.m1Pts;
+  const sdrGatePct=Math.min(sdrGatePts/trackMax*100,100);
+
+  const gateMarker=`<div style="position:absolute;left:${aeGatePct}%;top:0;bottom:0;width:2px;background:var(--red);z-index:3;opacity:0.7"></div><div style="position:absolute;left:${aeGatePct}%;top:-16px;transform:translateX(-50%);font-size:clamp(7px,0.5vw,9px);color:var(--redText);font-weight:700;white-space:nowrap;z-index:3">⛳ ${settings.aeGate} min</div>`;
+  const sdrGateMarker=`<div style="position:absolute;left:${sdrGatePct}%;top:0;bottom:0;width:2px;background:var(--red);z-index:3;opacity:0.7"></div><div style="position:absolute;left:${sdrGatePct}%;top:-16px;transform:translateX(-50%);font-size:clamp(7px,0.5vw,9px);color:var(--redText);font-weight:700;white-space:nowrap;z-index:3">⛳ ${settings.sdrGate} min</div>`;
+
   // Build AE lanes sorted by rank
   const aeLanes=teamResults.map((t,rank)=>{
     const confirmed=t.teamPts;
@@ -328,6 +337,7 @@ function renderRaceTrack(){
     const color=aeColors[rank]||aeColors[0];
     const memberNames=t.members.map(m=>m.name.split(" ")[0]).join(" & ");
     const icon=placeIcons[rank]||"🏁";
+    const pastGate=t.teamMeetings>=settings.aeGate;
     const pendLabel=pending>0?`<span style="font-size:9px;color:var(--amberText);margin-left:8px;font-weight:600">+${fmt(pending)} pending</span>`:"";
     return`<div class="race-lane" style="transition:all 0.3s">
       <div class="race-label">
@@ -335,6 +345,8 @@ function renderRaceTrack(){
         <div><div class="race-label-text">${t.name}</div><div class="race-label-sub">${memberNames}</div></div>
       </div>
       <div class="race-track-bg">
+        ${rank===0?gateMarker:""}
+        <div style="position:absolute;left:${aeGatePct}%;top:0;bottom:0;width:2px;background:${pastGate?'var(--green)':'var(--red)'};z-index:3;opacity:${rank===0?0:0.5}"></div>
         <div style="position:absolute;left:${dayPct}%;top:50%;transform:translateY(-50%);width:1px;height:20px;background:var(--mintGhost);z-index:2"></div>
         ${pending>0?`<div style="position:absolute;left:0;top:0;height:100%;width:${Math.max(confPct+pendPct,4)}%;background:repeating-linear-gradient(45deg,rgba(245,158,11,0.25),rgba(245,158,11,0.25) 4px,rgba(245,158,11,0.1) 4px,rgba(245,158,11,0.1) 8px);border-radius:14px;transition:width 0.6s"></div>`:""}
         <div class="race-track-fill" style="width:${Math.max(confPct,4)}%;background:${color};z-index:1;position:relative"><span class="race-track-pts">${fmt(confirmed)}</span></div>
@@ -351,6 +363,7 @@ function renderRaceTrack(){
     const pendPct=Math.min(pending/trackMax*100,100);
     const color=sdrColors[rank]||sdrColors[0];
     const icon=sdrPlaceIcons[rank]||"🏁";
+    const pastGate=s.countable>=settings.sdrGate;
     const pendLabel=pending>0?`<span style="font-size:9px;color:var(--amberText);margin-left:8px;font-weight:600">+${fmt(pending)} pending</span>`:"";
     return`<div class="race-lane" style="transition:all 0.3s">
       <div class="race-label">
@@ -358,6 +371,8 @@ function renderRaceTrack(){
         <div><div class="race-label-text">${s.name}</div><div class="race-label-sub">SDR · ${s.countable} meetings</div></div>
       </div>
       <div class="race-track-bg">
+        ${rank===0?sdrGateMarker:""}
+        <div style="position:absolute;left:${sdrGatePct}%;top:0;bottom:0;width:2px;background:${pastGate?'var(--green)':'var(--red)'};z-index:3;opacity:${rank===0?0:0.5}"></div>
         <div style="position:absolute;left:${dayPct}%;top:50%;transform:translateY(-50%);width:1px;height:20px;background:var(--mintGhost);z-index:2"></div>
         ${pending>0?`<div style="position:absolute;left:0;top:0;height:100%;width:${Math.max(confPct+pendPct,4)}%;background:repeating-linear-gradient(45deg,rgba(245,158,11,0.25),rgba(245,158,11,0.25) 4px,rgba(245,158,11,0.1) 4px,rgba(245,158,11,0.1) 8px);border-radius:14px;transition:width 0.6s"></div>`:""}
         <div class="race-track-fill" style="width:${Math.max(confPct,4)}%;background:${color};z-index:1;position:relative"><span class="race-track-pts">${fmt(confirmed)}</span></div>
@@ -382,6 +397,7 @@ function renderRaceTrack(){
         <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
           <div style="width:12px;height:6px;border-radius:3px;background:var(--accent)"></div><span style="font-size:9px;color:var(--mintFaint)">Confirmed</span>
           <div style="width:12px;height:6px;border-radius:3px;background:repeating-linear-gradient(45deg,rgba(245,158,11,0.4),rgba(245,158,11,0.4) 2px,rgba(245,158,11,0.15) 2px,rgba(245,158,11,0.15) 4px)"></div><span style="font-size:9px;color:var(--mintFaint)">Pending</span>
+          <div style="width:2px;height:12px;background:var(--red);border-radius:1px"></div><span style="font-size:9px;color:var(--mintFaint)">⛳ Gate (${settings.aeGate} mtgs)</span>
         </div>
       </div>
       ${aeLanes}
