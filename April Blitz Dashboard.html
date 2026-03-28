@@ -319,11 +319,9 @@ function renderRaceTrack(){
   const dayPct=Math.min(daysPassed/totalDays*100,100);
   const dayLabel=daysPassed>0&&daysPassed<totalDays?`Day ${daysPassed}`:"";
 
-  // Gate marker position (8 meetings at M1 value = 8 pts minimum on the scale)
-  const aeGatePts=settings.aeGate*settings.m1Pts;
-  const aeGatePct=Math.min(aeGatePts/trackMax*100,100);
-  const sdrGatePts=settings.sdrGate*settings.m1Pts;
-  const sdrGatePct=Math.min(sdrGatePts/trackMax*100,100);
+  // Gate marker position — raw meeting count (not points)
+  const aeGatePct=Math.min(settings.aeGate/trackMax*100,100);
+  const sdrGatePct=Math.min(settings.sdrGate/trackMax*100,100);
 
   const gateMarker=`<div style="position:absolute;left:${aeGatePct}%;top:0;bottom:0;width:2px;background:var(--red);z-index:3;opacity:0.7"></div><div style="position:absolute;left:${aeGatePct}%;top:-16px;transform:translateX(-50%);font-size:clamp(7px,0.5vw,9px);color:var(--redText);font-weight:700;white-space:nowrap;z-index:3">⛳ ${settings.aeGate} min</div>`;
   const sdrGateMarker=`<div style="position:absolute;left:${sdrGatePct}%;top:0;bottom:0;width:2px;background:var(--red);z-index:3;opacity:0.7"></div><div style="position:absolute;left:${sdrGatePct}%;top:-16px;transform:translateX(-50%);font-size:clamp(7px,0.5vw,9px);color:var(--redText);font-weight:700;white-space:nowrap;z-index:3">⛳ ${settings.sdrGate} min</div>`;
