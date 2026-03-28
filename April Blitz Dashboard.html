@@ -256,7 +256,7 @@ function calcTeam(team,idx){
   });
   const teamPts=ms.reduce((s,m)=>s+m.pts,0),teamMeetings=ms.reduce((s,m)=>s+m.meetings,0),gate=teamMeetings>=settings.aeGate;
   const teamPend=ms.reduce((s,m)=>s+m.pendPts,0),teamIrPend=ms.reduce((s,m)=>s+m.irPending,0);
-  let balance=true;if(teamPts>0)balance=Math.max(...ms.map(m=>m.pts))/teamPts<=settings.balanceMax/100;
+  let balance=true;if(teamMeetings>0)balance=Math.max(...ms.map(m=>m.meetings))/teamMeetings<=settings.balanceMax/100;
   return{name:teamDisplayName(idx),origName:team.name,members:ms,teamPts,teamMeetings,gate,balance,eligible:gate&&balance,teamPend,teamIrPend};
 }
 
@@ -445,9 +445,9 @@ function renderAE(){
     const gb=team.gate?badge(`${settings.aeGate}+ ✓`,"#166534","var(--greenDim)"):badge(`${team.teamMeetings}/${settings.aeGate}`,"var(--redText)","var(--redDim)");
     const bb=team.balance?badge(`${settings.balanceMax}/35 ✓`,"#166534","var(--greenDim)"):badge(`${settings.balanceMax}/35 ✗`,"var(--redText)","var(--redDim)");
     const eb=!team.eligible&&team.teamMeetings>0?badge("Not Eligible","var(--redText)","var(--redDim)"):"";
-    const mh=team.members.map(m=>{const sh=team.teamPts>0?(m.pts/team.teamPts*100):0,ov=team.teamPts>0&&m.pts/team.teamPts>settings.balanceMax/100,bc=ov?"var(--red)":"var(--accent)",tc=m.tag==="Vet"?"var(--accent)":"var(--amberText)",tb=m.tag==="Vet"?"var(--greenDim)":"var(--amberDim)";
-      const bb2=m.meetings>0?`<div style="margin-top:10px">${progressBar(sh,settings.balanceMax,ov?"var(--red)":"var(--accent)",4)}<div class="ae-balance-hint">${sh.toFixed(0)}% of ${settings.balanceMax}% max</div></div>`:"";
-      return`<div class="ae-member" style="border-left:3px solid ${bc}"><div class="ae-member-head"><span class="ae-member-name">${m.name}</span>${badge(m.tag,tc,tb)}</div><div class="ae-member-stats"><div><div class="stat-label">Meetings</div><div class="stat-val serif">${m.meetings}</div></div><div><div class="stat-label">Points</div><div class="stat-val serif">${fmt(m.pts)}</div></div><div><div class="stat-label">Share</div><div class="stat-val serif" style="color:${ov?'var(--redText)':'var(--mint)'}">${sh.toFixed(0)}%</div></div></div>${bb2}</div>`}).join("");
+    const mh=team.members.map(m=>{const sh=team.teamMeetings>0?(m.meetings/team.teamMeetings*100):0,ov=team.teamMeetings>0&&m.meetings/team.teamMeetings>settings.balanceMax/100,bc=ov?"var(--red)":"var(--accent)",tc=m.tag==="Vet"?"var(--accent)":"var(--amberText)",tb=m.tag==="Vet"?"var(--greenDim)":"var(--amberDim)";
+      const bb2=m.meetings>0?`<div style="margin-top:10px">${progressBar(sh,settings.balanceMax,ov?"var(--red)":"var(--accent)",4)}<div class="ae-balance-hint">${sh.toFixed(0)}% of ${settings.balanceMax}% max (meetings)</div></div>`:"";
+      return`<div class="ae-member" style="border-left:3px solid ${bc}"><div class="ae-member-head"><span class="ae-member-name">${m.name}</span>${badge(m.tag,tc,tb)}</div><div class="ae-member-stats"><div><div class="stat-label">Meetings</div><div class="stat-val serif">${m.meetings}</div></div><div><div class="stat-label">Points</div><div class="stat-val serif">${fmt(m.pts)}</div></div><div><div class="stat-label">Mtg Share</div><div class="stat-val serif" style="color:${ov?'var(--redText)':'var(--mint)'}">${sh.toFixed(0)}%</div></div></div>${bb2}</div>`}).join("");
     const pendHtml=(team.teamPend>0||team.teamIrPend>0)?`<div style="padding:0 20px 16px"><div class="pending-bar"><div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;font-weight:600;color:var(--amberText);margin-bottom:4px">Pending Points</div>${team.teamPend>0?`<div class="pending-row"><span class="pending-label">Meetings awaiting acceptance</span><span class="pending-val locked">+${fmt(team.teamPend)}</span></div>`:""}${team.teamIrPend>0?`<div class="pending-row"><span class="pending-label">${team.teamIrPend} IR awaiting conversion</span><span class="pending-val locked">+${fmt(team.teamIrPend*settings.irConvertedPts)}</span></div>`:""}</div></div>`:"";
     const tp=settings.teamPipeline&&settings.teamPipeline[idx]?settings.teamPipeline[idx]:0;
     const pipeHtml=tp>0?`<div style="font-size:11px;color:var(--green);font-weight:600;margin-left:8px">$${tp.toLocaleString()} pipeline</div>`:"";
@@ -490,7 +490,7 @@ function renderSettings(){
     ["SDR Activation Gate","sdrGate",s.sdrGate,"number","1","Min meetings to activate SDR bonus (default: 8)"],
     ["SDR Bonus Per 5","sdrBonusPer5",s.sdrBonusPer5,"number","100","$ per complete set of 5 (default: $1,000)"],
     ["AE Team Gate","aeGate",s.aeGate,"number","1","Min team meetings to be eligible (default: 8)"],
-    ["AE Balance Max %","balanceMax",s.balanceMax,"number","1","Max share one partner can contribute (default: 65%)"],
+    ["AE Balance Max %","balanceMax",s.balanceMax,"number","1","Max meeting share one partner can contribute (default: 65%)"],
     ["AE Team Prize ($)","aeTeamPrize",s.aeTeamPrize,"number","500","Total prize for winning team (default: $6,000)"]
   ];
   return`<div class="sec-label">Team Names</div>
@@ -752,8 +752,8 @@ function exportExcel(){
   const lh=["Date Booked","Date Scheduled","Rep","Firm","Persona","Meeting Type","Points","NDA Signed","Status","IR Converted","Role"];
   const lr=[...meetings].sort((a,b)=>new Date(a.dateBooked||a.date)-new Date(b.dateBooked||b.date)).map(m=>{const isSDR=SDRS.includes(m.bookedBy);let team="";if(!isSDR){const ti=TEAMS.findIndex(t=>t.members.some(mem=>mem.name===m.bookedBy));team=ti>=0?teamDisplayName(ti):""}return[m.dateBooked||m.date||"",m.dateScheduled||"",m.bookedBy,m.firm,m.persona,m.meetingType,calcPts(m),m.ndaSigned?"Yes":"No",m.status,m.meetingType==="IR"?(m.irConverted?"Yes":"No"):"",isSDR?"SDR":`AE (${team})`]});
   const sh=["SDR","Qualified Meetings","Points","Gate Hit","Sets of 5","Payout"],sr=SDRS.map(n=>{const s=calcSDR(n);return[n,s.countable,s.pts,s.gate?"Yes":"No",s.sets,s.payout]});
-  const ah=["Team","Member","Tag","Meetings","Points","Share %","Gate Hit","Balance Pass","Eligible","Team Total"],ar=[];
-  TEAMS.forEach((t,ti)=>{const tc=calcTeam(t,ti);tc.members.forEach((m,i)=>{const sh2=tc.teamPts>0?(m.pts/tc.teamPts*100).toFixed(1):"0";ar.push([i===0?tc.name:"",m.name,m.tag,m.meetings,m.pts,sh2+"%",i===0?(tc.gate?"Yes":"No"):"",i===0?(tc.balance?"Yes":"No"):"",i===0?(tc.eligible?"Yes":"No"):"",i===0?tc.teamPts:""])})});
+  const ah=["Team","Member","Tag","Meetings","Points","Mtg Share %","Gate Hit","Balance Pass","Eligible","Team Total"],ar=[];
+  TEAMS.forEach((t,ti)=>{const tc=calcTeam(t,ti);tc.members.forEach((m,i)=>{const sh2=tc.teamMeetings>0?(m.meetings/tc.teamMeetings*100).toFixed(1):"0";ar.push([i===0?tc.name:"",m.name,m.tag,m.meetings,m.pts,sh2+"%",i===0?(tc.gate?"Yes":"No"):"",i===0?(tc.balance?"Yes":"No"):"",i===0?(tc.eligible?"Yes":"No"):"",i===0?tc.teamPts:""])})});
   const wb=XLSX.utils.book_new();
   const ws1=XLSX.utils.aoa_to_sheet([lh,...lr]);ws1["!cols"]=[{wch:12},{wch:12},{wch:20},{wch:28},{wch:10},{wch:10},{wch:7},{wch:10},{wch:12},{wch:12},{wch:14}];
   const ws2=XLSX.utils.aoa_to_sheet([sh,...sr]);ws2["!cols"]=[{wch:16},{wch:18},{wch:8},{wch:10},{wch:10},{wch:10}];
