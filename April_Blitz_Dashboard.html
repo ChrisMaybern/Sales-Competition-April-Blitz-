@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>April Pipeline Blitz — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/themes/dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#0B1F14;--bgCard:#0F2A1B;--bgInput:#172E21;--border:#1E3D2B;--borderLight:#2A5038;--mint:#ECFFF5;--mintDim:rgba(236,255,245,0.7);--mintFaint:rgba(236,255,245,0.35);--mintGhost:rgba(236,255,245,0.12);--green:#22C55E;--greenDim:rgba(34,197,94,0.15);--amber:#F59E0B;--amberDim:rgba(245,158,11,0.15);--amberText:#FCD34D;--red:#EF4444;--redDim:rgba(239,68,68,0.12);--redText:#FCA5A5;--accent:#6ECBA0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--mint);min-height:100vh}
+.serif{font-family:'DM Serif Display',Georgia,serif}
+.header{border-bottom:1px solid var(--border);padding:clamp(16px,2vw,28px) clamp(20px,3vw,48px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.header-brand{font-size:clamp(9px,0.7vw,13px);text-transform:uppercase;letter-spacing:4px;font-weight:600;color:var(--mintFaint);margin-bottom:2px}
+.header-title{font-size:clamp(22px,2.2vw,40px);font-weight:400}
+.header-right{display:flex;align-items:center;gap:clamp(8px,1vw,16px);flex-wrap:wrap}
+.phase-dot{width:clamp(7px,0.5vw,10px);height:clamp(7px,0.5vw,10px);border-radius:50%;display:inline-block}
+.hdr-btn{padding:clamp(4px,0.4vw,8px) clamp(8px,0.8vw,16px);font-size:clamp(9px,0.65vw,12px);font-weight:700;text-transform:uppercase;letter-spacing:1px;border-radius:4px;cursor:pointer;font-family:inherit;border:1px solid}
+.timeline-wrap{padding:clamp(12px,1.2vw,24px) clamp(20px,3vw,48px);border-bottom:1px solid var(--border)}
+.timeline{display:flex;align-items:center}
+.tl-node{text-align:center;flex:1;min-width:clamp(60px,6vw,100px)}
+.tl-dot{width:clamp(10px,0.8vw,16px);height:clamp(10px,0.8vw,16px);border-radius:50%;margin:0 auto 6px}
+.tl-date{font-size:clamp(9px,0.7vw,13px);font-weight:700}
+.tl-label{font-size:clamp(8px,0.6vw,11px);color:var(--mintFaint);margin-top:1px}
+.tl-line{height:1px;flex:1;min-width:10px}
+.container{max-width:1800px;margin:0 auto;padding:clamp(16px,1.5vw,28px) clamp(20px,3vw,48px) 48px}
+.kpi-strip{display:flex;gap:clamp(8px,0.8vw,16px);margin-bottom:clamp(16px,1.5vw,28px);flex-wrap:wrap}
+.kpi{background:var(--bgCard);border:1px solid var(--border);border-radius:clamp(8px,0.6vw,14px);padding:clamp(12px,1.2vw,22px) clamp(14px,1.2vw,24px);flex:1;min-width:clamp(100px,12vw,180px);position:relative;overflow:hidden}
+.kpi.big{padding:clamp(18px,1.5vw,30px) clamp(18px,1.5vw,32px);min-width:clamp(130px,14vw,220px)}
+.kpi.glow{background:linear-gradient(135deg,var(--bgCard),#0D3520);border-color:var(--accent)}
+.kpi-glow-orb{position:absolute;top:-30px;right:-30px;width:80px;height:80px;background:radial-gradient(circle,rgba(110,203,160,0.15),transparent);border-radius:50%}
+.kpi-label{font-size:clamp(8px,0.6vw,12px);text-transform:uppercase;letter-spacing:2.5px;font-weight:600;color:var(--mintFaint);margin-bottom:4px}
+.kpi-value{font-size:clamp(20px,2vw,38px);font-weight:800;line-height:1.1}
+.kpi.big .kpi-value{font-size:clamp(26px,2.4vw,46px)}
+.kpi.glow .kpi-value{color:var(--accent)}
+.kpi-sub{font-size:clamp(9px,0.65vw,13px);color:var(--mintFaint);margin-top:3px}
+.form-wrap{background:var(--bgCard);border:1px solid var(--border);border-radius:12px;padding:clamp(16px,1.5vw,28px) clamp(18px,1.5vw,30px);margin-bottom:clamp(16px,1.5vw,28px)}
+.form-label{font-size:clamp(9px,0.65vw,12px);text-transform:uppercase;letter-spacing:2.5px;font-weight:700;color:var(--accent);margin-bottom:clamp(10px,1vw,18px)}
+.form-row{display:flex;gap:clamp(6px,0.6vw,12px);flex-wrap:wrap;margin-bottom:clamp(8px,0.7vw,14px)}
+.form-row:last-child{margin-bottom:0}
+.inp,.sel{padding:clamp(8px,0.6vw,14px) clamp(10px,0.8vw,16px);font-size:clamp(12px,0.85vw,16px);border:1px solid var(--border);border-radius:6px;background:var(--bgInput);color:var(--mint);outline:none;flex:1;min-width:0;font-family:inherit}
+.inp-wide{flex:2}
+.btn-add{padding:clamp(8px,0.6vw,14px) clamp(18px,1.2vw,28px);background:var(--accent);color:var(--bg);border:none;border-radius:6px;font-size:clamp(11px,0.75vw,14px);font-weight:800;text-transform:uppercase;letter-spacing:1px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.ir-check{display:flex;align-items:center;gap:5px;font-size:clamp(11px,0.75vw,14px);color:var(--mintDim);cursor:pointer;white-space:nowrap}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);padding-bottom:2px;margin-bottom:clamp(16px,1.5vw,28px);flex-wrap:wrap}
+.tab{padding:clamp(6px,0.6vw,12px) clamp(14px,1.2vw,26px);font-size:clamp(10px,0.75vw,14px);font-weight:500;text-transform:uppercase;letter-spacing:1.5px;border:none;cursor:pointer;border-radius:6px;background:transparent;color:var(--mintDim);font-family:inherit;transition:all 0.2s}
+.tab.active{font-weight:700;background:var(--accent);color:var(--bg)}
+.sec-label{font-size:clamp(9px,0.65vw,12px);text-transform:uppercase;letter-spacing:3px;font-weight:700;color:var(--accent);margin-bottom:clamp(10px,0.8vw,16px)}
+.badge{display:inline-block;font-size:clamp(8px,0.6vw,11px);font-weight:700;text-transform:uppercase;letter-spacing:1.2px;padding:clamp(2px,0.2vw,5px) clamp(6px,0.5vw,12px);border-radius:4px;white-space:nowrap}
+.pbar{border-radius:3px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:3px;transition:width 0.5s ease}
+.sdr-row{display:flex;gap:clamp(12px,1vw,20px);flex-wrap:wrap}
+.sdr-card{flex:1;min-width:clamp(280px,28vw,420px);background:var(--bgCard);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.sdr-head{padding:clamp(12px,1vw,20px) clamp(16px,1.2vw,24px);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.sdr-name{font-size:clamp(15px,1.2vw,22px);font-weight:700}
+.sdr-body{padding:clamp(16px,1.2vw,24px)}
+.sdr-stats{display:flex;gap:clamp(8px,0.6vw,14px);margin-bottom:clamp(14px,1.2vw,22px);text-align:center}
+.sdr-stats>div{flex:1}
+.stat-label{font-size:clamp(7px,0.55vw,11px);text-transform:uppercase;letter-spacing:2px;font-weight:600;color:var(--mintFaint)}
+.stat-val{font-size:clamp(22px,1.8vw,38px);font-weight:800;line-height:1.2}
+.pbar-label{display:flex;justify-content:space-between;margin-bottom:4px;font-size:clamp(9px,0.65vw,12px)}
+.pbar-label span:first-child{color:var(--mintFaint);font-weight:500}
+.pbar-label span:last-child{color:var(--mintDim);font-weight:600}
+.sdr-hint{font-size:clamp(9px,0.65vw,12px);font-weight:500;padding:clamp(5px,0.4vw,8px) clamp(8px,0.7vw,14px);border-radius:6px;margin-top:clamp(8px,0.7vw,14px)}
+.ae-stack{display:flex;flex-direction:column;gap:clamp(12px,1vw,20px)}
+.ae-card{background:var(--bgCard);border-radius:12px;overflow:hidden;border:1px solid var(--border);position:relative}
+.ae-card.winner{border:2px solid var(--green)}
+.ae-winner-badge{position:absolute;top:0;right:0;background:var(--green);color:var(--bg);font-size:clamp(8px,0.6vw,11px);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:clamp(4px,0.3vw,7px) clamp(10px,0.8vw,18px);border-radius:0 10px 0 10px}
+.ae-head{padding:clamp(12px,1vw,20px) clamp(16px,1.2vw,24px);border-bottom:1px solid var(--border);display:flex;gap:clamp(8px,0.6vw,14px);align-items:center;flex-wrap:wrap}
+.ae-name{font-size:clamp(15px,1.2vw,22px);font-weight:700}
+.ae-total{margin-left:auto;font-size:clamp(18px,1.5vw,28px);font-weight:800}
+.ae-total small{font-size:clamp(10px,0.75vw,14px);font-weight:500;color:var(--mintFaint)}
+.ae-body{padding:clamp(16px,1.2vw,24px);display:flex;gap:clamp(10px,0.8vw,18px);flex-wrap:wrap}
+.ae-member{flex:1;min-width:clamp(220px,22vw,360px);background:var(--bg);border-radius:10px;padding:clamp(12px,1vw,20px)}
+.ae-member-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:clamp(8px,0.6vw,14px)}
+.ae-member-name{font-size:clamp(12px,0.9vw,16px);font-weight:700}
+.ae-member-stats{display:flex;gap:clamp(12px,1vw,20px)}
+.ae-member-stats .stat-val{font-size:clamp(18px,1.4vw,28px)}
+.ae-balance-hint{font-size:clamp(8px,0.55vw,11px);color:var(--mintFaint);margin-top:3px}
+.log-table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+.log-table{width:100%;border-collapse:collapse}
+.log-table th{padding:clamp(8px,0.6vw,14px) clamp(10px,0.8vw,16px);text-align:left;font-size:clamp(8px,0.6vw,11px);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:var(--mintFaint);border-bottom:1px solid var(--border);background:var(--bgCard)}
+.log-table td{padding:clamp(8px,0.6vw,14px) clamp(10px,0.8vw,16px);border-bottom:1px solid var(--border);font-size:clamp(11px,0.8vw,14px);color:var(--mintDim)}
+.log-status{padding:clamp(3px,0.2vw,5px) clamp(5px,0.4vw,8px);font-size:clamp(9px,0.65vw,12px);font-weight:700;border-radius:4px;border:none;cursor:pointer;font-family:inherit}
+.btn-del{background:none;border:none;color:var(--mintFaint);cursor:pointer;font-size:clamp(14px,1vw,20px);line-height:1;padding:2px 6px;border-radius:4px}
+.empty-state{text-align:center;padding:clamp(32px,3vw,60px);color:var(--mintFaint);font-size:clamp(12px,0.85vw,15px)}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:999}
+.modal{background:var(--bgCard);border:1px solid var(--border);border-radius:12px;padding:clamp(24px,2vw,40px);min-width:320px;max-width:clamp(380px,30vw,500px)}
+.modal h3{font-size:clamp(13px,1vw,18px);font-weight:700;margin-bottom:16px;color:var(--mint)}
+.modal .inp{width:100%;margin-bottom:12px}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,1vw,20px)}
+.setting-card{background:var(--bgCard);border:1px solid var(--border);border-radius:10px;padding:clamp(14px,1.2vw,24px)}
+.setting-card label{display:block;font-size:clamp(8px,0.6vw,11px);text-transform:uppercase;letter-spacing:2px;font-weight:600;color:var(--mintFaint);margin-bottom:6px}
+.setting-card .inp{width:100%;flex:none}
+.setting-card .hint{font-size:clamp(9px,0.65vw,12px);color:var(--mintFaint);margin-top:4px}
+/* Race Track */
+.race-wrap{background:var(--bgCard);border:1px solid var(--border);border-radius:12px;padding:clamp(16px,1.5vw,28px) clamp(20px,1.5vw,32px);margin-bottom:clamp(16px,1.5vw,28px)}
+.race-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:clamp(12px,1vw,20px)}
+.race-title{font-size:clamp(9px,0.65vw,12px);text-transform:uppercase;letter-spacing:2.5px;font-weight:700;color:var(--accent)}
+.race-dates{font-size:clamp(9px,0.7vw,12px);color:var(--mintFaint)}
+.race-lane{display:flex;align-items:center;margin-bottom:clamp(10px,0.8vw,16px);position:relative;gap:8px}
+.race-lane:last-child{margin-bottom:0}
+.race-label{width:clamp(120px,10vw,200px);flex-shrink:0;display:flex;align-items:center;gap:8px}
+.race-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--bg);flex-shrink:0}
+.race-label-text{font-size:clamp(10px,0.8vw,14px);font-weight:600;color:var(--mint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.race-label-sub{font-size:clamp(8px,0.6vw,11px);color:var(--mintFaint);font-weight:400}
+.race-track-bg{flex:1;height:clamp(24px,2vw,36px);background:var(--bg);border-radius:14px;position:relative;overflow:hidden;border:1px solid var(--border)}
+.race-track-fill{height:100%;border-radius:14px;transition:width 0.6s ease;position:relative;display:flex;align-items:center;justify-content:flex-end;padding-right:clamp(8px,0.6vw,14px);min-width:36px}
+.race-track-pts{font-size:clamp(9px,0.7vw,12px);font-weight:800;color:var(--bg);white-space:nowrap}
+.race-marker{position:absolute;top:50%;transform:translateY(-50%);width:1px;height:18px;background:var(--border)}
+.race-marker-label{position:absolute;top:-14px;font-size:8px;color:var(--mintFaint);transform:translateX(-50%);white-space:nowrap}
+/* IR Toggle */
+.ir-toggle{padding:clamp(2px,0.2vw,5px) clamp(6px,0.5vw,10px);font-size:clamp(8px,0.6vw,11px);font-weight:700;text-transform:uppercase;letter-spacing:1px;border-radius:4px;cursor:pointer;border:1px solid;font-family:inherit;transition:all 0.2s}
+.ir-toggle.pending{background:var(--amberDim);color:var(--amberText);border-color:rgba(245,158,11,0.3)}
+.ir-toggle.pending:hover{background:rgba(245,158,11,0.25)}
+.ir-toggle.converted{background:var(--greenDim);color:var(--green);border-color:rgba(34,197,94,0.3);cursor:default}
+/* Pending Points */
+.pending-bar{background:var(--bgCard);border:1px solid var(--border);border-radius:8px;padding:clamp(8px,0.7vw,14px) clamp(12px,0.9vw,18px);margin-top:clamp(10px,0.8vw,16px)}
+.pending-row{display:flex;justify-content:space-between;align-items:center;font-size:clamp(9px,0.7vw,12px);padding:3px 0}
+.pending-label{color:var(--mintFaint);font-weight:500}
+.pending-val{font-weight:700;font-family:'DM Serif Display',Georgia,serif}
+.pending-val.locked{color:var(--amberText)}
+.pending-val.ready{color:var(--green)}
+/* Autocomplete */
+.ac-wrap{position:relative;flex:2;min-width:0}
+.ac-wrap .inp{width:100%}
+.ac-list{position:absolute;top:100%;left:0;right:0;background:var(--bgCard);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;z-index:50;display:none}
+.ac-list.show{display:block}
+.ac-item{padding:8px 12px;font-size:12px;color:var(--mintDim);cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s}
+.ac-item:last-child{border-bottom:none}
+.ac-item:hover,.ac-item.active{background:var(--borderLight);color:var(--mint)}
+.ac-item em{font-style:normal;color:var(--accent);font-weight:700}
+/* Flatpickr overrides */
+.flatpickr-calendar{background:var(--bgCard)!important;border:1px solid var(--border)!important;box-shadow:0 8px 24px rgba(0,0,0,0.4)!important;font-family:'DM Sans',system-ui,sans-serif!important}
+.flatpickr-day{color:var(--mint)!important;border-radius:6px!important}
+.flatpickr-day.selected{background:var(--accent)!important;border-color:var(--accent)!important;color:var(--bg)!important}
+.flatpickr-day:hover{background:var(--borderLight)!important}
+.flatpickr-day.today{border-color:var(--accent)!important}
+.flatpickr-months .flatpickr-month{color:var(--mint)!important;fill:var(--mint)!important}
+.flatpickr-current-month .flatpickr-monthDropdown-months{background:var(--bgInput)!important;color:var(--mint)!important}
+.flatpickr-current-month input.cur-year{color:var(--mint)!important}
+span.flatpickr-weekday{color:var(--mintFaint)!important;font-weight:600!important}
+.flatpickr-day.flatpickr-disabled{color:var(--mintGhost)!important}
+.flatpickr-months .flatpickr-prev-month,.flatpickr-months .flatpickr-next-month{fill:var(--mint)!important}
+.flatpickr-months .flatpickr-prev-month svg,.flatpickr-months .flatpickr-next-month svg{fill:var(--mint)!important}
+.numInputWrapper span{border-color:var(--border)!important}
+.numInputWrapper span:hover{background:var(--borderLight)!important}
+.numInputWrapper span svg{fill:var(--mint)!important}
+</style>
+</head>
+<body>
+<div class="header">
+  <div><div class="header-brand">Maybern Sales</div><div class="header-title serif">April Pipeline Blitz</div></div>
+  <div class="header-right">
+    <div style="text-align:right">
+      <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="phase-dot" id="phaseDot"></span><span id="phaseLabel" style="font-size:11px;font-weight:600"></span></div>
+      <div id="phaseInfo" style="font-size:10px;color:var(--mintFaint);margin-top:2px"></div>
+    </div>
+    <button onclick="exportExcel()" class="hdr-btn" style="background:var(--greenDim);color:var(--green);border-color:rgba(34,197,94,0.25)">Export</button>
+    <span id="adminBtnWrap"></span>
+  </div>
+</div>
+<div class="timeline-wrap"><div class="timeline" id="timeline"></div></div>
+<div class="container">
+  <div class="kpi-strip" id="kpiStrip"></div>
+  <div id="raceTrack"></div>
+  <div id="formArea"></div>
+  <div class="tabs" id="tabs"></div>
+  <div id="tabContent"></div>
+</div>
+<div id="modalArea"></div>
+
+<script>
+/* ══════ ADMIN AUTH ══════ */
+function hashPw(pw){let h=0;for(let i=0;i<pw.length;i++){h=((h<<5)-h+pw.charCodeAt(i))|0}return Math.abs(h).toString(16)}
+const CORRECT_HASH=hashPw("April Blitz 2026");
+function isAdmin(){return sessionStorage.getItem("blitz-admin")==="1"}
+function setAdmin(v){sessionStorage.setItem("blitz-admin",v?"1":"0")}
+function showLoginModal(){
+  document.getElementById("modalArea").innerHTML=`<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal"><h3>🔒 Admin Login</h3><input type="password" class="inp" id="pwInput" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')attemptLogin()" autofocus><div id="pwError" style="color:var(--redText);font-size:11px;margin-bottom:12px;display:none">Incorrect password.</div><div class="modal-btns"><button class="hdr-btn" style="background:transparent;color:var(--mintDim);border-color:var(--border)" onclick="closeModal()">Cancel</button><button class="btn-add" onclick="attemptLogin()">Login</button></div></div></div>`;
+  setTimeout(()=>document.getElementById("pwInput")?.focus(),50);
+}
+function attemptLogin(){
+  if(hashPw(document.getElementById("pwInput").value)===CORRECT_HASH){setAdmin(true);closeModal();render()}
+  else{document.getElementById("pwError").style.display="block";document.getElementById("pwInput").value="";document.getElementById("pwInput").focus()}
+}
+function adminLogout(){setAdmin(false);if(activeTab==="settings")activeTab="overview";render()}
+function closeModal(){document.getElementById("modalArea").innerHTML=""}
+function renderAdminBtn(){
+  const el=document.getElementById("adminBtnWrap");
+  el.innerHTML=isAdmin()
+    ?`<button class="hdr-btn" style="background:var(--redDim);color:var(--redText);border-color:rgba(239,68,68,0.25)" onclick="resetAll()">Reset</button><button class="hdr-btn" style="background:var(--amberDim);color:var(--amberText);border-color:rgba(245,158,11,0.25);margin-left:4px" onclick="adminLogout()">🔓 Logout</button>`
+    :`<button class="hdr-btn" style="background:var(--mintGhost);color:var(--mintDim);border-color:var(--border)" onclick="showLoginModal()">🔒 Admin</button>`;
+}
+
+/* ══════ CONFIG ══════ */
+const SDRS=["Alex Gow","Steph Hulme"];
+const TEAMS=[
+  {name:"Team 1",members:[{name:"Gabrielle Everett",tag:"Vet"},{name:"Will Allen",tag:"Ramp"}]},
+  {name:"Team 2",members:[{name:"Brad Bridwell",tag:"Ramp"},{name:"Asaf Gavrieli",tag:"Ramp"}]},
+  {name:"Team 3",members:[{name:"Chris Khouri",tag:"Ramp"},{name:"Bryan Champ",tag:"Vet"}]}
+];
+const ALL_REPS=[...SDRS,...TEAMS.flatMap(t=>t.members.map(m=>m.name))];
+const DATES={kickoff:"2026-03-30",start:"2026-04-01",midCheck:"2026-04-15",bookingClose:"2026-04-30",acceptDeadline:"2026-05-14",payout:"2026-05-16"};
+const DEFAULT_SETTINGS={m2Multiplier:1.5,m3Multiplier:2.25,m4Multiplier:2.25,sdrGate:8,sdrBonusPer5:1000,aeGate:8,balanceMax:65,aeTeamPrize:6000,irConvertedPts:1,m1Pts:1,teamNames:["Purple Cobras","Red Jaguars","Blue Barracudas"],pipelineTotal:0,teamPipeline:[0,0,0],sdrPipeline:[0,0]};
+const STORE_KEY="blitz-dash-v3";const SETTINGS_KEY="blitz-settings-v1";
+
+let meetings=[],settings={...DEFAULT_SETTINGS},activeTab="overview",logFilter="all";
+let fpBooked=null,fpScheduled=null;
+
+function loadData(){try{return JSON.parse(localStorage.getItem(STORE_KEY))||[]}catch{return[]}}
+function saveData(){localStorage.setItem(STORE_KEY,JSON.stringify(meetings))}
+function loadSettings(){try{const s={...DEFAULT_SETTINGS,...JSON.parse(localStorage.getItem(SETTINGS_KEY))};if(!s.teamNames)s.teamNames=[...DEFAULT_SETTINGS.teamNames];if(!s.teamPipeline)s.teamPipeline=[0,0,0];if(!s.sdrPipeline)s.sdrPipeline=[0,0];return s}catch{return{...DEFAULT_SETTINGS,teamNames:[...DEFAULT_SETTINGS.teamNames],teamPipeline:[0,0,0],sdrPipeline:[0,0]}}}
+function saveSettings(){localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings))}
+
+/* ══════ CALC ENGINE ══════ */
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function calcPts(m){
+  if(m.status!=="Qualified")return 0;
+  let pts=0;
+  if(m.meetingType==="IR")pts=m.irConverted?settings.irConvertedPts:0;
+  else if(m.meetingType==="M4")pts=settings.m4Multiplier;
+  else if(m.meetingType==="M3")pts=settings.m3Multiplier;
+  else if(m.meetingType==="M2"||m.meetingType==="M2+")pts=settings.m2Multiplier;
+  else pts=settings.m1Pts;
+  return pts;
+}
+function fmt(n){return n%1===0?n.toString():n.toFixed(1)}
+function calcSDR(name){
+  const qual=meetings.filter(m=>m.bookedBy===name&&m.status==="Qualified");
+  const pend=meetings.filter(m=>m.bookedBy===name&&m.status==="Pending");
+  let pts=0;qual.forEach(m=>pts+=calcPts(m));
+  let pendPts=0;pend.forEach(m=>{let p=0;if(m.meetingType==="M4")p=settings.m4Multiplier;else if(m.meetingType==="M3")p=settings.m3Multiplier;else if(m.meetingType==="M2"||m.meetingType==="M2+")p=settings.m2Multiplier;else if(m.meetingType==="IR")p=0;else p=settings.m1Pts;pendPts+=p});
+  const irPending=qual.filter(m=>m.meetingType==="IR"&&!m.irConverted).length;
+  const irPendPts=irPending*settings.irConvertedPts;
+  const countable=qual.filter(m=>m.meetingType!=="IR"||m.irConverted).length;
+  const gate=countable>=settings.sdrGate,floored=Math.floor(pts),sets=Math.floor(floored/5);
+  const gatePts=!gate?pts:0;
+  return{name,pts,countable,gate,sets,payout:gate?sets*settings.sdrBonusPer5:0,nextSet:gate?(sets+1)*5-floored:settings.sdrGate-countable,pendPts,irPendPts,irPending,gatePts,pendCount:pend.length};
+}
+function teamDisplayName(idx){return(settings.teamNames&&settings.teamNames[idx])||TEAMS[idx].name}
+
+function calcTeam(team,idx){
+  const ms=team.members.map(mem=>{
+    const mine=meetings.filter(m=>m.bookedBy===mem.name&&m.status==="Qualified");
+    const pend=meetings.filter(m=>m.bookedBy===mem.name&&m.status==="Pending");
+    let pts=0;mine.forEach(m=>pts+=calcPts(m));
+    let pendPts=0;pend.forEach(m=>{let p=0;if(m.meetingType==="M4")p=settings.m4Multiplier;else if(m.meetingType==="M3")p=settings.m3Multiplier;else if(m.meetingType==="M2"||m.meetingType==="M2+")p=settings.m2Multiplier;else if(m.meetingType==="IR")p=0;else p=settings.m1Pts;pendPts+=p});
+    const irPending=mine.filter(m=>m.meetingType==="IR"&&!m.irConverted).length;
+    return{...mem,pts,meetings:mine.length,pendPts,pendCount:pend.length,irPending};
+  });
+  const teamPts=ms.reduce((s,m)=>s+m.pts,0),teamMeetings=ms.reduce((s,m)=>s+m.meetings,0),gate=teamMeetings>=settings.aeGate;
+  const teamPend=ms.reduce((s,m)=>s+m.pendPts,0),teamIrPend=ms.reduce((s,m)=>s+m.irPending,0);
+  let balance=true;if(teamMeetings>0)balance=Math.max(...ms.map(m=>m.meetings))/teamMeetings<=settings.balanceMax/100;
+  return{name:teamDisplayName(idx),origName:team.name,members:ms,teamPts,teamMeetings,gate,balance,eligible:gate&&balance,teamPend,teamIrPend};
+}
+
+/* ══════ DATE HELPERS ══════ */
+function daysUntil(ds){return Math.ceil((new Date(ds+"T00:00:00")-new Date())/86400000)}
+function getPhase(){const now=new Date();if(now<new Date(DATES.start))return{label:"Pre-Competition",color:"var(--amber)"};if(now<=new Date(DATES.bookingClose))return{label:"Booking Window Open",color:"var(--green)"};if(now<=new Date(DATES.acceptDeadline))return{label:"Acceptance Window",color:"var(--amber)"};return{label:"Competition Ended",color:"var(--red)"}}
+
+/* ══════ HTML HELPERS ══════ */
+function badge(text,color,bg){return`<span class="badge" style="color:${color};background:${bg}">${text}</span>`}
+function progressBar(val,max,color,h=6){const pct=max>0?Math.min(val/max*100,100):0;return`<div class="pbar" style="height:${h}px;background:var(--mintGhost)"><div class="pbar-fill" style="width:${pct}%;background:${color}"></div></div>`}
+
+/* ══════ RENDER: HEADER ITEMS ══════ */
+function renderPhase(){const p=getPhase(),dl=Math.max(0,daysUntil(DATES.bookingClose));document.getElementById("phaseDot").style.cssText=`background:${p.color};box-shadow:0 0 6px ${p.color}`;document.getElementById("phaseLabel").style.color=p.color;document.getElementById("phaseLabel").textContent=p.label;document.getElementById("phaseInfo").textContent=(dl>0?`${dl} days left`:"Booking window closed")+" · April 1–30, 2026"}
+
+function renderTimeline(){
+  const events=[{date:"Mar 30",label:"Kickoff",key:DATES.kickoff},{date:"Apr 1",label:"Window Opens",key:DATES.start},{date:"Apr 15",label:"Mid-Check",key:DATES.midCheck},{date:"Apr 30",label:"Window Closes",key:DATES.bookingClose},{date:"May 14",label:"Accept Deadline",key:DATES.acceptDeadline},{date:"May 16",label:"Payout",key:DATES.payout}];
+  const now=new Date();let html="";
+  events.forEach((e,i)=>{const passed=now>=new Date(e.key+"T00:00:00"),isNext=!passed&&(i===0||now>=new Date(events[i-1].key+"T00:00:00")),dotColor=passed?"var(--green)":isNext?"var(--amber)":"var(--border)",shadow=isNext?"box-shadow:0 0 8px var(--amber)":"",dateColor=passed?"var(--green)":isNext?"var(--amberText)":"var(--mintFaint)";
+    html+=`<div class="tl-node"><div class="tl-dot" style="background:${dotColor};${shadow}"></div><div class="tl-date" style="color:${dateColor}">${e.date}</div><div class="tl-label">${e.label}</div></div>`;
+    if(i<events.length-1)html+=`<div class="tl-line" style="background:${passed?'var(--green)':'var(--border)'}"></div>`;
+  });
+  document.getElementById("timeline").innerHTML=html;
+}
+
+function renderKPIs(){
+  const qual=meetings.filter(m=>m.status==="Qualified"),totalPts=qual.reduce((s,m)=>s+calcPts(m),0);
+  const sdrCount=qual.filter(m=>SDRS.includes(m.bookedBy)).length,aeCount=qual.filter(m=>!SDRS.includes(m.bookedBy)).length;
+  const sdrPay=SDRS.reduce((s,n)=>s+calcSDR(n).payout,0),aeBonus=TEAMS.map((t,i)=>calcTeam(t,i)).some(t=>t.eligible)?settings.aeTeamPrize:0;
+  const m1=qual.filter(m=>m.meetingType==="M1").length,m2=qual.filter(m=>m.meetingType==="M2"||m.meetingType==="M2+").length,m3=qual.filter(m=>m.meetingType==="M3").length,m4=qual.filter(m=>m.meetingType==="M4").length;
+  const pipeline=settings.pipelineTotal||0;
+  document.getElementById("kpiStrip").innerHTML=`
+    <div class="kpi big glow"><div class="kpi-glow-orb"></div><div class="kpi-label">Qualified Meetings</div><div class="kpi-value serif" style="color:var(--accent)">${qual.length}</div><div class="kpi-sub">${m1} M1 · ${m2} M2 · ${m3+m4} M3+</div></div>
+    <div class="kpi big"><div class="kpi-label">Total Points</div><div class="kpi-value serif">${fmt(totalPts)}</div><div class="kpi-sub">${settings.m2Multiplier}x / ${settings.m3Multiplier}x multipliers</div></div>
+    <div class="kpi"><div class="kpi-label">Pipeline Generated</div><div class="kpi-value serif" style="color:var(--green)">${pipeline>0?'$'+pipeline.toLocaleString():'—'}</div><div class="kpi-sub">from qualified opportunities</div></div>
+    <div class="kpi"><div class="kpi-label">SDR / AE Split</div><div class="kpi-value serif">${sdrCount}/${aeCount}</div><div class="kpi-sub">sourced meetings</div></div>`;
+}
+
+/* ══════ RENDER: RACE TRACK ══════ */
+function renderRaceTrack(){
+  const teamResults=TEAMS.map((t,i)=>{const tc=calcTeam(t,i);return{...tc,type:"ae",origIdx:i}});
+  const sdrResults=SDRS.map((n,i)=>{const sc=calcSDR(n);return{...sc,type:"sdr",origIdx:i}});
+
+  // Sort each group by confirmed points descending
+  teamResults.sort((a,b)=>b.teamPts-a.teamPts);
+  sdrResults.sort((a,b)=>b.pts-a.pts);
+
+  const aeColors=["#A855F7","#EF4444","#3B82F6"];
+  const sdrColors=["#E879F9","#FB923C"];
+  const placeIcons=["🥇","🥈","🥉"];
+  const sdrPlaceIcons=["🥇","🥈"];
+
+  // Track scale: include pending in max so yellow bars fit
+  const allConfirmed=[...teamResults.map(t=>t.teamPts),...sdrResults.map(s=>s.pts)];
+  const allWithPend=[...teamResults.map(t=>t.teamPts+t.teamPend+t.teamIrPend*settings.irConvertedPts),...sdrResults.map(s=>s.pts+s.pendPts+s.irPendPts)];
+  const trackMax=Math.max(Math.max(...allWithPend)*1.2,10);
+
+  // Day progress
+  const now=new Date(),start=new Date("2026-04-01");
+  const totalDays=29,daysPassed=Math.max(0,Math.min(totalDays,Math.floor((now-start)/86400000)));
+  const dayPct=Math.min(daysPassed/totalDays*100,100);
+  const dayLabel=daysPassed>0&&daysPassed<totalDays?`Day ${daysPassed}`:"";
+
+  // Gate marker position — raw meeting count (not points)
+  const aeGatePct=Math.min(settings.aeGate/trackMax*100,100);
+  const sdrGatePct=Math.min(settings.sdrGate/trackMax*100,100);
+
+  const gateMarker=`<div style="position:absolute;left:${aeGatePct}%;top:0;bottom:0;width:2px;background:var(--red);z-index:3;opacity:0.7"></div><div style="position:absolute;left:${aeGatePct}%;top:-16px;transform:translateX(-50%);font-size:clamp(7px,0.5vw,9px);color:var(--redText);font-weight:700;white-space:nowrap;z-index:3">⛳ ${settings.aeGate} min</div>`;
+  const sdrGateMarker=`<div style="position:absolute;left:${sdrGatePct}%;top:0;bottom:0;width:2px;background:var(--red);z-index:3;opacity:0.7"></div><div style="position:absolute;left:${sdrGatePct}%;top:-16px;transform:translateX(-50%);font-size:clamp(7px,0.5vw,9px);color:var(--redText);font-weight:700;white-space:nowrap;z-index:3">⛳ ${settings.sdrGate} min</div>`;
+
+  // Build AE lanes sorted by rank
+  const aeLanes=teamResults.map((t,rank)=>{
+    const confirmed=t.teamPts;
+    const pending=t.teamPend+t.teamIrPend*settings.irConvertedPts;
+    const confPct=Math.min(confirmed/trackMax*100,100);
+    const pendPct=Math.min(pending/trackMax*100,100);
+    const color=aeColors[t.origIdx]||aeColors[0];
+    const memberNames=t.members.map(m=>m.name.split(" ")[0]).join(" & ");
+    const icon=placeIcons[rank]||"🏁";
+    const pastGate=t.teamMeetings>=settings.aeGate;
+    const pendLabel=pending>0?`<span style="font-size:9px;color:var(--amberText);margin-left:8px;font-weight:600">+${fmt(pending)} pending</span>`:"";
+    return`<div class="race-lane" style="transition:all 0.3s">
+      <div class="race-label">
+        <div style="font-size:18px;width:28px;text-align:center;flex-shrink:0">${icon}</div>
+        <div><div class="race-label-text">${t.name}</div><div class="race-label-sub">${memberNames}</div></div>
+      </div>
+      <div class="race-track-bg">
+        ${rank===0?gateMarker:""}
+        <div style="position:absolute;left:${aeGatePct}%;top:0;bottom:0;width:2px;background:${pastGate?'var(--green)':'var(--red)'};z-index:3;opacity:${rank===0?0:0.5}"></div>
+        <div style="position:absolute;left:${dayPct}%;top:50%;transform:translateY(-50%);width:1px;height:20px;background:var(--mintGhost);z-index:2"></div>
+        ${pending>0?`<div style="position:absolute;left:0;top:0;height:100%;width:${Math.max(confPct+pendPct,4)}%;background:repeating-linear-gradient(45deg,rgba(245,158,11,0.25),rgba(245,158,11,0.25) 4px,rgba(245,158,11,0.1) 4px,rgba(245,158,11,0.1) 8px);border-radius:14px;transition:width 0.6s"></div>`:""}
+        <div class="race-track-fill" style="width:${Math.max(confPct,4)}%;background:${color};z-index:1;position:relative"><span class="race-track-pts">${fmt(confirmed)}</span></div>
+      </div>
+      ${pendLabel}
+    </div>`;
+  }).join("");
+
+  // Build SDR lanes sorted by rank
+  const sdrLanes=sdrResults.map((s,rank)=>{
+    const confirmed=s.pts;
+    const pending=s.pendPts+s.irPendPts;
+    const confPct=Math.min(confirmed/trackMax*100,100);
+    const pendPct=Math.min(pending/trackMax*100,100);
+    const color=sdrColors[rank]||sdrColors[0];
+    const icon=sdrPlaceIcons[rank]||"🏁";
+    const pastGate=s.countable>=settings.sdrGate;
+    const pendLabel=pending>0?`<span style="font-size:9px;color:var(--amberText);margin-left:8px;font-weight:600">+${fmt(pending)} pending</span>`:"";
+    return`<div class="race-lane" style="transition:all 0.3s">
+      <div class="race-label">
+        <div style="font-size:18px;width:28px;text-align:center;flex-shrink:0">${icon}</div>
+        <div><div class="race-label-text">${s.name}</div><div class="race-label-sub">SDR · ${s.countable} meetings</div></div>
+      </div>
+      <div class="race-track-bg">
+        ${rank===0?sdrGateMarker:""}
+        <div style="position:absolute;left:${sdrGatePct}%;top:0;bottom:0;width:2px;background:${pastGate?'var(--green)':'var(--red)'};z-index:3;opacity:${rank===0?0:0.5}"></div>
+        <div style="position:absolute;left:${dayPct}%;top:50%;transform:translateY(-50%);width:1px;height:20px;background:var(--mintGhost);z-index:2"></div>
+        ${pending>0?`<div style="position:absolute;left:0;top:0;height:100%;width:${Math.max(confPct+pendPct,4)}%;background:repeating-linear-gradient(45deg,rgba(245,158,11,0.25),rgba(245,158,11,0.25) 4px,rgba(245,158,11,0.1) 4px,rgba(245,158,11,0.1) 8px);border-radius:14px;transition:width 0.6s"></div>`:""}
+        <div class="race-track-fill" style="width:${Math.max(confPct,4)}%;background:${color};z-index:1;position:relative"><span class="race-track-pts">${fmt(confirmed)}</span></div>
+      </div>
+      ${pendLabel}
+    </div>`;
+  }).join("");
+
+  document.getElementById("raceTrack").innerHTML=`
+    <div class="race-wrap">
+      <div class="race-header">
+        <div class="race-title">Pipeline Race</div>
+        <div class="race-dates">
+          <span style="color:var(--mint);font-weight:600">Apr 1</span>
+          <span style="margin:0 6px">→</span>
+          ${dayLabel?`<span style="color:var(--amberText);font-weight:600;margin-right:6px">${dayLabel}</span><span style="margin-right:6px">→</span>`:""}
+          <span style="color:var(--mint);font-weight:600">Apr 30</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;font-weight:600;color:var(--mintFaint)">AE Teams</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-left:auto;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:50%;background:#A855F7"></div><span style="font-size:9px;color:var(--mintFaint)">Purple Cobras</span></div>
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:50%;background:#EF4444"></div><span style="font-size:9px;color:var(--mintFaint)">Red Jaguars</span></div>
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:50%;background:#3B82F6"></div><span style="font-size:9px;color:var(--mintFaint)">Blue Barracudas</span></div>
+          <div style="width:1px;height:12px;background:var(--border)"></div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <div style="width:12px;height:6px;border-radius:3px;background:var(--accent)"></div><span style="font-size:9px;color:var(--mintFaint)">Confirmed</span>
+            <div style="width:12px;height:6px;border-radius:3px;background:repeating-linear-gradient(45deg,rgba(245,158,11,0.4),rgba(245,158,11,0.4) 2px,rgba(245,158,11,0.15) 2px,rgba(245,158,11,0.15) 4px)"></div><span style="font-size:9px;color:var(--mintFaint)">Pending</span>
+            <div style="width:2px;height:12px;background:var(--red);border-radius:1px"></div><span style="font-size:9px;color:var(--mintFaint)">⛳ Gate (${settings.aeGate} mtgs)</span>
+          </div>
+        </div>
+      </div>
+      ${aeLanes}
+      <div style="height:1px;background:var(--border);margin:14px 0"></div>
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;font-weight:600;color:var(--mintFaint);margin-bottom:8px">SDRs</div>
+      ${sdrLanes}
+    </div>`;
+}
+
+/* ══════ RENDER: FORM ══════ */
+function renderForm(){
+  const og=`<optgroup label="SDRs">${SDRS.map(s=>`<option>${s}</option>`).join("")}</optgroup>`+TEAMS.map((t,i)=>`<optgroup label="${teamDisplayName(i)}">${t.members.map(m=>`<option>${m.name}</option>`).join("")}</optgroup>`).join("");
+  document.getElementById("formArea").innerHTML=`
+    <div class="form-wrap"><div class="form-label">Log a Meeting</div>
+      <div class="form-row"><select id="fBookedBy" class="sel">${og}</select><div class="ac-wrap"><input id="fFirm" class="inp" placeholder="Prospect Firm" autocomplete="off" oninput="acFilter()" onfocus="acFilter()" onkeydown="acKeydown(event)"><div class="ac-list" id="acList"></div></div></div>
+      <div class="form-row">
+        <div style="flex:1;min-width:0"><div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;color:var(--mintFaint);margin-bottom:4px">Date Booked</div><input id="fDateBooked" class="inp" style="width:100%" placeholder="Select date..."><div style="font-size:9px;color:var(--mintFaint);margin-top:3px">Apr 1–30 only</div></div>
+        <div style="flex:1;min-width:0"><div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;color:var(--mintFaint);margin-bottom:4px">Date Scheduled</div><input id="fDateScheduled" class="inp" style="width:100%" placeholder="Select date..."><div style="font-size:9px;color:var(--mintFaint);margin-top:3px">Today through May 14</div></div>
+      </div>
+      <div class="form-row" style="align-items:center">
+        <select id="fPersona" class="sel"><option>Qualified</option></select>
+        <select id="fType" class="sel" ><option>M1</option><option>M2</option><option>M3</option><option>M4</option></select>
+        <select id="fStatus" class="sel"><option>Qualified</option><option>Pending</option><option>Disqualified</option></select>
+        <label class="ir-check" id="irCheckWrap" style="display:none"><input type="checkbox" id="fIrConverted"> IR Converted</label>
+        <button class="btn-add" onclick="addMeeting()">+ Add</button>
+      </div>
+    </div>`;
+  // Init flatpickr with date locks
+  const admin=isAdmin();
+  const today=new Date().toISOString().split("T")[0];
+  const bookedOpts={dateFormat:"Y-m-d",defaultDate:new Date(),theme:"dark",animate:true,disableMobile:true};
+  const schedOpts={...bookedOpts};
+  if(!admin){
+    bookedOpts.minDate="2026-04-01";bookedOpts.maxDate="2026-04-30";
+    schedOpts.minDate=today;schedOpts.maxDate="2026-05-14";
+  }
+  fpBooked=flatpickr("#fDateBooked",bookedOpts);
+  fpScheduled=flatpickr("#fDateScheduled",schedOpts);
+}
+
+/* ══════ RENDER: SDR ══════ */
+function renderSDR(){
+  return`<div class="sdr-row">${SDRS.map((n,si)=>{const s=calcSDR(n),gc=s.gate?"var(--green)":"var(--amber)",gb=s.gate?badge("Gate Hit ✓","#166534","var(--greenDim)"):badge(`${s.countable}/${settings.sdrGate} to gate`,"var(--redText)","var(--redDim)"),pc=s.payout>0?"var(--green)":"var(--mintFaint)";
+    const sp=settings.sdrPipeline&&settings.sdrPipeline[si]?settings.sdrPipeline[si]:0;
+    const pipeTag=sp>0?`<div style="font-size:10px;color:var(--green);font-weight:600;margin-top:6px;text-align:center">$${sp.toLocaleString()} pipeline generated</div>`:"";
+    const hint=s.gate?`<div class="sdr-hint" style="background:var(--amberDim);color:var(--amberText)">${s.nextSet} more point${s.nextSet!==1?"s":""} to next $${settings.sdrBonusPer5.toLocaleString()}</div>`:`<div class="sdr-hint" style="background:var(--amberDim);color:var(--amberText)">${settings.sdrGate-s.countable} more meeting${settings.sdrGate-s.countable!==1?"s":""} to activate bonus</div>`;
+    return`<div class="sdr-card"><div class="sdr-head"><span class="sdr-name serif">${s.name}</span>${gb}</div><div class="sdr-body">
+      <div class="sdr-stats"><div><div class="stat-label">Meetings</div><div class="stat-val serif">${s.countable}</div></div><div><div class="stat-label">Points</div><div class="stat-val serif">${fmt(s.pts)}</div></div><div><div class="stat-label">Payout</div><div class="stat-val serif" style="color:${pc}">$${s.payout.toLocaleString()}</div></div></div>
+      ${pipeTag}
+      <div style="margin-bottom:10px"><div class="pbar-label"><span>Gate (${settings.sdrGate} meetings)</span><span>${Math.min(s.countable,settings.sdrGate)}/${settings.sdrGate}</span></div>${progressBar(s.countable,settings.sdrGate,gc)}</div>
+      <div><div class="pbar-label"><span>Sets of 5 (${s.sets} × $${settings.sdrBonusPer5.toLocaleString()})</span><span>${fmt(s.pts)} pts → ${s.sets} sets</span></div>${progressBar(s.pts%5,5,"var(--accent)")}</div>
+      ${hint}
+      ${(s.pendPts>0||s.irPending>0||s.gatePts>0)?`<div class="pending-bar"><div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;font-weight:600;color:var(--amberText);margin-bottom:4px">Pending Points</div>${s.pendCount>0?`<div class="pending-row"><span class="pending-label">${s.pendCount} meeting${s.pendCount!==1?"s":""} awaiting acceptance</span><span class="pending-val locked">+${fmt(s.pendPts)}</span></div>`:""} ${s.irPending>0?`<div class="pending-row"><span class="pending-label">${s.irPending} IR awaiting conversion</span><span class="pending-val locked">+${fmt(s.irPendPts)}</span></div>`:""} ${!s.gate&&s.pts>0?`<div class="pending-row"><span class="pending-label">Points locked (below gate)</span><span class="pending-val locked">${fmt(s.pts)} pts → $0 until gate</span></div>`:""}</div>`:""}</div></div>`}).join("")}</div>`;
+}
+
+/* ══════ RENDER: AE ══════ */
+function renderAE(){
+  const aeColors=["#A855F7","#EF4444","#3B82F6"];
+  const teams=TEAMS.map((t,i)=>calcTeam(t,i)),eMax=Math.max(...teams.filter(t=>t.eligible).map(t=>t.teamPts),0),wIdx=teams.findIndex(t=>t.eligible&&t.teamPts===eMax&&eMax>0),pp=settings.aeTeamPrize/2;
+  return`<div class="ae-stack">${teams.map((team,idx)=>{const isW=idx===wIdx,teamColor=aeColors[idx]||aeColors[0],wb=isW?`<div class="ae-winner-badge" style="background:${teamColor}">🏆 Leading — $${pp.toLocaleString()} each</div>`:"";
+    const gb=team.gate?badge(`${settings.aeGate}+ ✓`,"#166534","var(--greenDim)"):badge(`${team.teamMeetings}/${settings.aeGate}`,"var(--redText)","var(--redDim)");
+    const bb=team.balance?badge(`${settings.balanceMax}/35 ✓`,"#166534","var(--greenDim)"):badge(`${settings.balanceMax}/35 ✗`,"var(--redText)","var(--redDim)");
+    const eb=!team.eligible&&team.teamMeetings>0?badge("Not Eligible","var(--redText)","var(--redDim)"):"";
+    const mh=team.members.map(m=>{const sh=team.teamMeetings>0?(m.meetings/team.teamMeetings*100):0,ov=team.teamMeetings>0&&m.meetings/team.teamMeetings>settings.balanceMax/100,bc=ov?"var(--red)":teamColor,tc=m.tag==="Vet"?"var(--accent)":"var(--amberText)",tb=m.tag==="Vet"?"var(--greenDim)":"var(--amberDim)";
+      const bb2=m.meetings>0?`<div style="margin-top:10px">${progressBar(sh,settings.balanceMax,ov?"var(--red)":teamColor,4)}<div class="ae-balance-hint">${sh.toFixed(0)}% of ${settings.balanceMax}% max (meetings)</div></div>`:"";
+      return`<div class="ae-member" style="border-left:3px solid ${bc}"><div class="ae-member-head"><span class="ae-member-name">${m.name}</span>${badge(m.tag,tc,tb)}</div><div class="ae-member-stats"><div><div class="stat-label">Meetings</div><div class="stat-val serif">${m.meetings}</div></div><div><div class="stat-label">Points</div><div class="stat-val serif">${fmt(m.pts)}</div></div><div><div class="stat-label">Mtg Share</div><div class="stat-val serif" style="color:${ov?'var(--redText)':'var(--mint)'}">${sh.toFixed(0)}%</div></div></div>${bb2}</div>`}).join("");
+    const pendHtml=(team.teamPend>0||team.teamIrPend>0)?`<div style="padding:0 20px 16px"><div class="pending-bar"><div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;font-weight:600;color:var(--amberText);margin-bottom:4px">Pending Points</div>${team.teamPend>0?`<div class="pending-row"><span class="pending-label">Meetings awaiting acceptance</span><span class="pending-val locked">+${fmt(team.teamPend)}</span></div>`:""}${team.teamIrPend>0?`<div class="pending-row"><span class="pending-label">${team.teamIrPend} IR awaiting conversion</span><span class="pending-val locked">+${fmt(team.teamIrPend*settings.irConvertedPts)}</span></div>`:""}</div></div>`:"";
+    const tp=settings.teamPipeline&&settings.teamPipeline[idx]?settings.teamPipeline[idx]:0;
+    const pipeHtml=tp>0?`<div style="font-size:11px;color:var(--green);font-weight:600;margin-left:8px">$${tp.toLocaleString()} pipeline</div>`:"";
+    const cardBorder=isW?`border:2px solid ${teamColor}`:`border-left:3px solid ${teamColor}`;
+    return`<div class="ae-card${isW?' winner':''}" style="${cardBorder}">${wb}<div class="ae-head"><span class="ae-name serif" style="color:${teamColor}">${team.name}</span>${gb} ${bb} ${eb}<div style="margin-left:auto;display:flex;align-items:baseline;gap:8px"><div class="ae-total serif">${fmt(team.teamPts)} <small>pts</small></div>${pipeHtml}</div></div><div class="ae-body">${mh}</div>${pendHtml}</div>`}).join("")}</div>`;
+}
+
+/* ══════ RENDER: LOG ══════ */
+function renderLog(filter){
+  filter=filter||logFilter;
+  if(meetings.length===0)return`<div class="empty-state">No meetings logged yet. Use the form above to add your first meeting.</div>`;
+  const sorted=[...meetings].sort((a,b)=>new Date(b.dateBooked||b.date)-new Date(a.dateBooked||a.date));
+  const filtered=filter==="all"?sorted:filter==="sdr"?sorted.filter(m=>SDRS.includes(m.bookedBy)):sorted.filter(m=>!SDRS.includes(m.bookedBy));
+  const admin=isAdmin(),sdrN=meetings.filter(m=>SDRS.includes(m.bookedBy)).length,aeN=meetings.length-sdrN;
+  const fh=[["all",`All (${meetings.length})`],["sdr",`SDRs (${sdrN})`],["ae",`AEs (${aeN})`]].map(([k,l])=>`<button class="tab${filter===k?' active':''}" onclick="renderLogTab('${k}')">${l}</button>`).join("");
+  const rows=filtered.map(m=>{const db=m.dateBooked||m.date||"",ds=m.dateScheduled||"",pC=m.persona==="IR"?"var(--redText)":"var(--accent)",pB=m.persona==="IR"?"var(--redDim)":"var(--greenDim)",tC=m.meetingType==="M2"||m.meetingType==="M3"||m.meetingType==="M4"||m.meetingType==="M2+"?"var(--green)":m.meetingType==="IR"?"var(--mintFaint)":"var(--mint)",sB=m.status==="Qualified"?"var(--greenDim)":m.status==="Disqualified"?"var(--redDim)":"var(--amberDim)",sC=m.status==="Qualified"?"var(--green)":m.status==="Disqualified"?"var(--redText)":"var(--amberText)";
+    const irToggle=m.meetingType==="IR"?(m.irConverted?`<button class="ir-toggle converted" title="Converted">✓ Converted</button>`:`<button class="ir-toggle pending" onclick="convertIR('${m.id}')" title="Click to mark as converted">Convert IR</button>`):"";
+    const typeDisplay=m.meetingType==="M2"||m.meetingType==="M2+"?`M2 ×${settings.m2Multiplier}`:m.meetingType==="M3"?`M3 ×${settings.m3Multiplier}`:m.meetingType==="M4"?`M4 ×${settings.m4Multiplier}`:m.meetingType;
+    const stCell=admin
+      ?`<select class="log-status" style="background:${sB};color:${sC}" onchange="updateStatus('${m.id}',this.value)">${["Qualified","Pending","Disqualified"].map(s=>`<option${m.status===s?" selected":""}>${s}</option>`).join("")}</select>`
+      :m.status==="Pending"
+        ?`<button class="ir-toggle pending" onclick="confirmMeeting('${m.id}')" title="Click to confirm this meeting">Confirm ✓</button>`
+        :badge(m.status,sC,sB);
+    return`<tr><td style="white-space:nowrap;font-weight:500;font-size:11px">${db}</td><td style="white-space:nowrap;font-weight:400;font-size:11px;color:var(--mintFaint)">${ds}</td><td style="font-weight:600;color:var(--mint)">${m.bookedBy}</td><td>${m.firm}</td><td>${badge(m.persona,pC,pB)}</td><td><span style="font-weight:700;color:${tC}">${typeDisplay}</span> ${irToggle}</td><td style="font-weight:700;color:var(--accent)" class="serif">${fmt(calcPts(m))}</td><td>${stCell}</td>${admin?`<td><button class="btn-del" onclick="deleteMeeting('${m.id}')" title="Delete">×</button></td>`:""}</tr>`}).join("");
+  return`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px"><div style="display:flex;gap:6px">${fh}</div><button onclick="exportExcel()" class="hdr-btn" style="background:var(--greenDim);color:var(--green);border-color:rgba(34,197,94,0.25)">⬇ Export</button></div><div class="log-table-wrap"><table class="log-table"><thead><tr><th>Booked</th><th>Scheduled</th><th>Rep</th><th>Firm</th><th>Persona</th><th>Type</th><th>Points</th><th>Status</th>${admin?"<th></th>":""}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+/* ══════ RENDER: SETTINGS (admin) ══════ */
+function renderSettings(){
+  if(!isAdmin())return`<div class="empty-state">Admin login required.</div>`;
+  const s=settings;
+  const fields=[
+    ["M2 Multiplier","m2Multiplier",s.m2Multiplier,"number","0.1","Points per M2 meeting (default: 1.5)"],
+    ["M3 Multiplier","m3Multiplier",s.m3Multiplier,"number","0.1","Points per M3 meeting (default: 2.25)"],
+    ["M4 Multiplier","m4Multiplier",s.m4Multiplier,"number","0.1","Points per M4 meeting — capped at M3 (default: 2.25)"],
+    ["M1 Points","m1Pts",s.m1Pts,"number","0.5","Points per first meeting (default: 1)"],
+    ["IR Converted Points","irConvertedPts",s.irConvertedPts,"number","0.5","Points when IR converts (default: 1)"],
+    ["SDR Activation Gate","sdrGate",s.sdrGate,"number","1","Min meetings to activate SDR bonus (default: 8)"],
+    ["SDR Bonus Per 5","sdrBonusPer5",s.sdrBonusPer5,"number","100","$ per complete set of 5 (default: $1,000)"],
+    ["AE Team Gate","aeGate",s.aeGate,"number","1","Min team meetings to be eligible (default: 8)"],
+    ["AE Balance Max %","balanceMax",s.balanceMax,"number","1","Max meeting share one partner can contribute (default: 65%)"],
+    ["AE Team Prize ($)","aeTeamPrize",s.aeTeamPrize,"number","500","Total prize for winning team (default: $6,000)"]
+  ];
+  return`<div class="sec-label">Team Names</div>
+    <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap">${TEAMS.map((t,i)=>{
+      const dn=teamDisplayName(i),members=t.members.map(m=>m.name.split(" ")[0]).join(" & ");
+      return`<div class="setting-card" style="flex:1;min-width:200px"><label>${t.name} — ${members}</label><input class="inp" type="text" value="${dn}" onchange="updateTeamName(${i},this.value)" placeholder="Enter team name"><div class="hint">Display name shown everywhere</div></div>`;
+    }).join("")}</div>
+    <div class="sec-label">Competition Parameters</div><div class="settings-grid">${fields.map(([label,key,val,type,step,hint])=>
+    `<div class="setting-card"><label>${label}</label><input class="inp" type="${type}" step="${step}" value="${val}" onchange="updateSetting('${key}',parseFloat(this.value))"><div class="hint">${hint}</div></div>`
+  ).join("")}</div><div style="margin-top:20px"><button class="btn-add" onclick="resetSettings()">Reset to Defaults</button></div><div style="margin-top:10px;font-size:10px;color:var(--mintFaint)">Changes apply immediately to all calculations.</div>`;
+}
+function updateSetting(key,val){if(isNaN(val))return;settings[key]=val;saveSettings();render()}
+function updateTeamName(idx,val){if(!settings.teamNames)settings.teamNames=[...DEFAULT_SETTINGS.teamNames];settings.teamNames[idx]=val.trim()||DEFAULT_SETTINGS.teamNames[idx];saveSettings();render()}
+function updateTeamPipeline(idx,val){if(!settings.teamPipeline)settings.teamPipeline=[0,0,0];settings.teamPipeline[idx]=val;saveSettings();render()}
+function updateSdrPipeline(idx,val){if(!settings.sdrPipeline)settings.sdrPipeline=[0,0];settings.sdrPipeline[idx]=val;saveSettings();render()}
+function resetSettings(){
+  document.getElementById("modalArea").innerHTML=`<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal"><h3>⚠️ Reset Settings</h3><p style="font-size:13px;color:var(--mintDim);margin-bottom:16px">This will reset all multipliers, thresholds, prizes, and team names back to defaults.</p><div class="modal-btns"><button class="hdr-btn" style="background:transparent;color:var(--mintDim);border-color:var(--border)" onclick="closeModal()">Cancel</button><button class="hdr-btn" style="background:var(--amberDim);color:var(--amberText);border-color:rgba(245,158,11,0.4)" onclick="confirmResetSettings()">Yes, Reset to Defaults</button></div></div></div>`;
+}
+function confirmResetSettings(){settings={...DEFAULT_SETTINGS,teamNames:[...DEFAULT_SETTINGS.teamNames],teamPipeline:[...DEFAULT_SETTINGS.teamPipeline],sdrPipeline:[...DEFAULT_SETTINGS.sdrPipeline]};saveSettings();closeModal();render()}
+
+/* ══════ RENDER: ADMIN PORTAL ══════ */
+function renderAdminPortal(){
+  if(!isAdmin())return`<div class="empty-state">Admin login required.</div>`;
+
+  // Current payout
+  const sdrStats=SDRS.map(n=>calcSDR(n));
+  const sdrPay=sdrStats.reduce((s,r)=>s+r.payout,0);
+  const teamStats=TEAMS.map((t,i)=>calcTeam(t,i));
+  const anyEligible=teamStats.some(t=>t.eligible);
+  const aeBonus=anyEligible?settings.aeTeamPrize:0;
+  const totalCurrent=sdrPay+aeBonus;
+
+  // Velocity forecast
+  const now=new Date(),start=new Date("2026-04-01"),end=new Date("2026-04-30");
+  const daysPassed=Math.max(1,Math.floor((now-start)/86400000));
+  const totalDays=30;
+  const qual=meetings.filter(m=>m.status==="Qualified");
+  const pend=meetings.filter(m=>m.status==="Pending");
+  const dailyRate=qual.length/Math.min(daysPassed,totalDays);
+  const projectedTotal=Math.round(dailyRate*totalDays);
+  // Project SDR payouts
+  const sdrProjected=SDRS.map(n=>{
+    const s=calcSDR(n);
+    const myRate=s.countable/Math.min(daysPassed,totalDays);
+    const proj=Math.round(myRate*totalDays);
+    const projGate=proj>=settings.sdrGate;
+    const projSets=Math.floor(proj/5);
+    return{name:n,current:s.payout,projected:projGate?projSets*settings.sdrBonusPer5:0,projMeetings:proj,currentMeetings:s.countable};
+  });
+  const projSdrPay=sdrProjected.reduce((s,r)=>s+r.projected,0);
+  const projAeBonus=projectedTotal>=settings.aeGate*3?settings.aeTeamPrize:aeBonus; // rough estimate
+  const projTotal=projSdrPay+projAeBonus;
+
+  // Budget section
+  const budgetHtml=`
+    <div class="sec-label">Payout & Forecast</div>
+    <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+      <div class="kpi" style="border-color:var(--green)"><div class="kpi-label">Current Payout</div><div class="kpi-value serif" style="color:var(--green)">$${totalCurrent.toLocaleString()}</div><div class="kpi-sub">SDR $${sdrPay.toLocaleString()} · AE $${aeBonus.toLocaleString()}</div></div>
+      <div class="kpi" style="border-color:var(--amber)"><div class="kpi-label">Projected Payout (EOM)</div><div class="kpi-value serif" style="color:var(--amberText)">$${projTotal.toLocaleString()}</div><div class="kpi-sub">Based on ${fmt(dailyRate)} meetings/day velocity</div></div>
+      <div class="kpi"><div class="kpi-label">Meetings Pace</div><div class="kpi-value serif">${qual.length} → ${projectedTotal}</div><div class="kpi-sub">${qual.length} booked · ${pend.length} pending · ~${projectedTotal} projected</div></div>
+      <div class="kpi"><div class="kpi-label">Budget Range</div><div class="kpi-value serif">$10K–$14K</div><div class="kpi-sub">Approved max exposure</div></div>
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap">
+    ${sdrProjected.map(s=>`
+      <div class="setting-card" style="flex:1;min-width:200px">
+        <label>${s.name} — SDR Payout</label>
+        <div style="display:flex;gap:16px;margin-top:8px">
+          <div><div class="stat-label">Current</div><div style="font-size:18px;font-weight:700;color:var(--green)" class="serif">$${s.current.toLocaleString()}</div><div style="font-size:10px;color:var(--mintFaint)">${s.currentMeetings} meetings</div></div>
+          <div><div class="stat-label">Projected</div><div style="font-size:18px;font-weight:700;color:var(--amberText)" class="serif">$${s.projected.toLocaleString()}</div><div style="font-size:10px;color:var(--mintFaint)">~${s.projMeetings} meetings</div></div>
+        </div>
+      </div>`).join("")}
+      <div class="setting-card" style="flex:1;min-width:200px">
+        <label>AE Team Prize</label>
+        <div style="margin-top:8px"><div class="stat-label">Status</div><div style="font-size:18px;font-weight:700;color:${anyEligible?'var(--green)':'var(--mintFaint)'}" class="serif">${anyEligible?`$${settings.aeTeamPrize.toLocaleString()} triggered`:'Not yet triggered'}</div><div style="font-size:10px;color:var(--mintFaint)">${anyEligible?teamStats.filter(t=>t.eligible).map(t=>t.name).join(', ')+' eligible':'No team meets gate + balance yet'}</div></div>
+      </div>
+    </div>`;
+
+  // Editable meeting table
+  const sorted=[...meetings].sort((a,b)=>new Date(b.dateBooked||b.date)-new Date(a.dateBooked||a.date));
+  const typeOpts=["M1","M2","M3","M4"].map(t=>`<option value="${t}">${t}</option>`).join("");
+
+  const tableRows=sorted.map(m=>{
+    const pts=calcPts(m);
+    const irCheck=m.meetingType==="IR"?`<label style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--mintDim);cursor:pointer;white-space:nowrap;margin-top:4px"><input type="checkbox" ${m.irConverted?'checked':''} onchange="adminEditField('${m.id}','irConverted',this.checked)"> Converted</label>`:'';
+    return`<tr>
+      <td><input type="text" value="${m.dateBooked||m.date||''}" class="inp" style="width:110px;padding:5px 8px;font-size:11px" onchange="adminEditField('${m.id}','dateBooked',this.value)"></td>
+      <td><input type="text" value="${m.dateScheduled||''}" class="inp" style="width:110px;padding:5px 8px;font-size:11px" onchange="adminEditField('${m.id}','dateScheduled',this.value)"></td>
+      <td><select class="sel" style="padding:5px 6px;font-size:11px;min-width:130px" onchange="adminEditField('${m.id}','bookedBy',this.value)">${ALL_REPS.map(r=>`<option${m.bookedBy===r?' selected':''}>${r}</option>`).join('')}</select></td>
+      <td><input type="text" value="${m.firm}" class="inp" style="width:160px;padding:5px 8px;font-size:11px" onchange="adminEditField('${m.id}','firm',this.value)"></td>
+      <td><select class="sel" style="padding:5px 6px;font-size:11px" onchange="adminEditField('${m.id}','persona',this.value)">${["Qualified"].map(p=>`<option${m.persona===p?' selected':''}>${p}</option>`).join('')}</select></td>
+      <td><select class="sel" style="padding:5px 6px;font-size:11px" onchange="adminEditField('${m.id}','meetingType',this.value)">${["M1","M2","M3","M4"].map(t=>`<option${m.meetingType===t?' selected':''}>${t}</option>`).join('')}</select></td>
+      <td style="font-weight:700;color:var(--accent);text-align:center" class="serif">${fmt(pts)}</td>
+      <td><select class="sel" style="padding:5px 6px;font-size:11px;background:${m.status==='Qualified'?'var(--greenDim)':m.status==='Disqualified'?'var(--redDim)':'var(--amberDim)'};color:${m.status==='Qualified'?'var(--green)':m.status==='Disqualified'?'var(--redText)':'var(--amberText)'}" onchange="adminEditField('${m.id}','status',this.value)">${["Qualified","Pending","Disqualified"].map(s=>`<option${m.status===s?' selected':''}>${s}</option>`).join('')}</select></td>
+      <td><button class="btn-del" onclick="adminDeleteMeeting('${m.id}')" title="Delete">×</button></td>
+    </tr>`;
+  }).join("");
+
+  const tableHtml=meetings.length===0?`<div class="empty-state">No meetings logged yet.</div>`:`
+    <div class="sec-label">All Meetings — Editable</div>
+    <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:10px;color:var(--mintFaint)">${meetings.length} total · ${qual.length} qualified · ${pend.length} pending · ${meetings.filter(m=>m.status==='Disqualified').length} disqualified</div>
+      <button onclick="exportExcel()" class="hdr-btn" style="background:var(--greenDim);color:var(--green);border-color:rgba(34,197,94,0.25)">⬇ Export</button>
+    </div>
+    <div style="overflow-x:auto;border-radius:10px;border:1px solid var(--border)">
+      <table class="log-table" style="min-width:1000px">
+        <thead><tr><th>Booked</th><th>Scheduled</th><th>Rep</th><th>Firm</th><th>Persona</th><th>Type</th><th>Pts</th><th>Status</th><th></th></tr></thead>
+        <tbody>${tableRows}</tbody>
+      </table>
+    </div>`;
+
+  const pipelineHtml=`
+    <div class="sec-label">Pipeline Generated (from Salesforce)</div>
+    <div style="display:flex;gap:12px;margin-bottom:8px;flex-wrap:wrap">
+      <div class="setting-card" style="flex:1;min-width:200px;border-color:var(--green)">
+        <label>Total Pipeline</label>
+        <div style="display:flex;align-items:center;gap:4px"><span style="color:var(--mintFaint);font-size:14px;font-weight:600">$</span><input class="inp" type="number" step="1000" min="0" value="${settings.pipelineTotal||0}" onchange="updateSetting('pipelineTotal',parseInt(this.value)||0)" style="flex:1"></div>
+        <div class="hint">Combined pipeline from all Blitz meetings</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap">
+      ${TEAMS.map((t,i)=>{const dn=teamDisplayName(i),val=settings.teamPipeline&&settings.teamPipeline[i]?settings.teamPipeline[i]:0;
+        return`<div class="setting-card" style="flex:1;min-width:180px"><label>${dn} Pipeline</label><div style="display:flex;align-items:center;gap:4px"><span style="color:var(--mintFaint);font-size:14px;font-weight:600">$</span><input class="inp" type="number" step="1000" min="0" value="${val}" onchange="updatePipeline('team',${i},parseInt(this.value)||0)" style="flex:1"></div></div>`;
+      }).join("")}
+      ${SDRS.map((n,i)=>{const val=settings.sdrPipeline&&settings.sdrPipeline[i]?settings.sdrPipeline[i]:0;
+        return`<div class="setting-card" style="flex:1;min-width:180px"><label>${n} Pipeline</label><div style="display:flex;align-items:center;gap:4px"><span style="color:var(--mintFaint);font-size:14px;font-weight:600">$</span><input class="inp" type="number" step="1000" min="0" value="${val}" onchange="updatePipeline('sdr',${i},parseInt(this.value)||0)" style="flex:1"></div></div>`;
+      }).join("")}
+    </div>`;
+
+  return budgetHtml+pipelineHtml+tableHtml;
+}
+
+function updatePipeline(type,idx,val){
+  if(type==='team'){if(!settings.teamPipeline)settings.teamPipeline=[0,0,0];settings.teamPipeline[idx]=val;settings.pipelineTotal=settings.teamPipeline.reduce((s,v)=>s+v,0)+(settings.sdrPipeline||[0,0]).reduce((s,v)=>s+v,0);}
+  else{if(!settings.sdrPipeline)settings.sdrPipeline=[0,0];settings.sdrPipeline[idx]=val;settings.pipelineTotal=(settings.teamPipeline||[0,0,0]).reduce((s,v)=>s+v,0)+settings.sdrPipeline.reduce((s,v)=>s+v,0);}
+  saveSettings();render();
+}
+
+function adminEditField(id,field,value){
+  const m=meetings.find(m=>m.id===id);
+  if(!m||!isAdmin())return;
+  if(field==='irConverted')m[field]=!!value;
+  else m[field]=value;
+  saveData();render();
+}
+
+function adminDeleteMeeting(id){
+  if(!isAdmin())return;
+  document.getElementById("modalArea").innerHTML=`<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal"><h3>⚠️ Delete Meeting</h3><p style="font-size:13px;color:var(--mintDim);margin-bottom:16px">Are you sure you want to delete this meeting?</p><div class="modal-btns"><button class="hdr-btn" style="background:transparent;color:var(--mintDim);border-color:var(--border)" onclick="closeModal()">Cancel</button><button class="hdr-btn" style="background:var(--redDim);color:var(--redText);border-color:rgba(239,68,68,0.4)" onclick="confirmDeleteMeeting('${id}')">Yes, Delete</button></div></div></div>`;
+}
+function confirmDeleteMeeting(id){meetings=meetings.filter(m=>m.id!==id);saveData();closeModal();render()}
+
+/* ══════ TABS ══════ */
+function renderTabs(){
+  const tabs=[["overview","Overview"],["ae","AE Leaderboard"],["sdr","SDR Leaderboard"],["log",`Meeting Log (${meetings.length})`]];
+  if(isAdmin()){tabs.push(["admin","📊 Admin Portal"]);tabs.push(["settings","⚙ Settings"]);}
+  document.getElementById("tabs").innerHTML=tabs.map(([k,l])=>`<button class="tab${activeTab===k?" active":""}" onclick="switchTab('${k}')">${l}</button>`).join("");
+}
+function switchTab(t){activeTab=t;logFilter="all";render()}
+function renderLogTab(f){logFilter=f;document.getElementById("tabContent").innerHTML=renderLog(f)}
+function renderTabContent(){
+  const el=document.getElementById("tabContent");
+  if(activeTab==="overview")el.innerHTML=`<div class="sec-label">AE Team Competition</div>${renderAE()}<div class="sec-label" style="margin-top:28px">SDR Individual Bonus</div>${renderSDR()}`;
+  else if(activeTab==="sdr")el.innerHTML=renderSDR();
+  else if(activeTab==="ae")el.innerHTML=renderAE();
+  else if(activeTab==="log")el.innerHTML=renderLog(logFilter);
+  else if(activeTab==="admin")el.innerHTML=renderAdminPortal();
+  else if(activeTab==="settings")el.innerHTML=renderSettings();
+}
+
+/* ══════ AUTOCOMPLETE ══════ */
+let acIdx=-1;
+function getUniqueFirms(){return[...new Set(meetings.map(m=>m.firm).filter(Boolean))].sort()}
+function acFilter(){
+  const input=document.getElementById("fFirm"),list=document.getElementById("acList");
+  if(!input||!list)return;
+  const val=input.value.trim().toLowerCase();
+  if(!val){list.classList.remove("show");list.innerHTML="";acIdx=-1;return}
+  const firms=getUniqueFirms().filter(f=>f.toLowerCase().includes(val));
+  if(firms.length===0||firms.length===1&&firms[0].toLowerCase()===val){list.classList.remove("show");list.innerHTML="";acIdx=-1;return}
+  acIdx=-1;
+  list.innerHTML=firms.map((f,i)=>{
+    const idx=f.toLowerCase().indexOf(val);
+    const highlighted=f.slice(0,idx)+`<em>${f.slice(idx,idx+val.length)}</em>`+f.slice(idx+val.length);
+    return`<div class="ac-item" data-idx="${i}" onmousedown="acSelect('${f.replace(/'/g,"\\'")}')">${highlighted}</div>`;
+  }).join("");
+  list.classList.add("show");
+}
+function acSelect(firm){
+  const input=document.getElementById("fFirm"),list=document.getElementById("acList");
+  input.value=firm;
+  list.classList.remove("show");list.innerHTML="";acIdx=-1;
+  // Auto-set meeting type based on existing meetings at this firm
+  const existing=meetings.filter(m=>m.firm.toLowerCase()===firm.toLowerCase());
+  if(existing.length>0){const typeEl=document.getElementById("fType");if(typeEl){const hasM3=existing.some(m=>m.meetingType==="M3"||m.meetingType==="M4");const hasM2=existing.some(m=>m.meetingType==="M2"||m.meetingType==="M2+");typeEl.value=hasM3?"M4":hasM2?"M3":"M2"}}
+  input.focus();
+}
+function acKeydown(event){
+  const list=document.getElementById("acList"),items=list.querySelectorAll(".ac-item");
+  if(!items.length){if(event.key==="Enter")addMeeting();return}
+  if(event.key==="ArrowDown"){event.preventDefault();acIdx=Math.min(acIdx+1,items.length-1);acHighlight(items)}
+  else if(event.key==="ArrowUp"){event.preventDefault();acIdx=Math.max(acIdx-1,-1);acHighlight(items)}
+  else if(event.key==="Enter"){event.preventDefault();if(acIdx>=0&&items[acIdx]){const firm=items[acIdx].textContent;acSelect(firm)}else{list.classList.remove("show");addMeeting()}}
+  else if(event.key==="Escape"){list.classList.remove("show");acIdx=-1}
+}
+function acHighlight(items){items.forEach((el,i)=>{el.classList.toggle("active",i===acIdx)})}
+// Close autocomplete when clicking outside
+document.addEventListener("click",function(e){
+  const list=document.getElementById("acList");
+  if(list&&!e.target.closest(".ac-wrap"))list.classList.remove("show");
+});
+
+/* ══════ ACTIONS ══════ */
+function addMeeting(){
+  const firm=document.getElementById("fFirm").value.trim();if(!firm)return;
+  const db=fpBooked?fpBooked.input.value:"",ds=fpScheduled?fpScheduled.input.value:"";
+  const admin=isAdmin();
+  // Date validation (safety net beyond flatpickr constraints)
+  if(!admin){
+    if(db&&(db<"2026-04-01"||db>"2026-04-30")){alert("Date Booked must be within April 1–30, 2026.");return}
+    const today=new Date().toISOString().split("T")[0];
+    if(ds&&ds<today){alert("Date Scheduled cannot be in the past.");return}
+    if(ds&&ds>"2026-05-14"){alert("Date Scheduled cannot be after May 14, 2026 (acceptance deadline).");return}
+  }
+  const meetingType=document.getElementById("fType").value;
+  meetings.push({id:uid(),bookedBy:document.getElementById("fBookedBy").value,firm,persona:document.getElementById("fPersona").value,meetingType:meetingType,dateBooked:db,dateScheduled:ds,status:document.getElementById("fStatus").value,irConverted:document.getElementById("fIrConverted")?.checked||false});
+  saveData();render();
+}
+function convertIR(id){const m=meetings.find(m=>m.id===id);if(m&&m.meetingType==="IR"&&!m.irConverted){m.irConverted=true;saveData();render()}}
+function confirmMeeting(id){const m=meetings.find(m=>m.id===id);if(m&&m.status==="Pending"){m.status="Qualified";saveData();render()}}
+function updateStatus(id,status){if(!isAdmin())return;const m=meetings.find(m=>m.id===id);if(m){m.status=status;saveData();render()}}
+function deleteMeeting(id){if(!isAdmin())return;meetings=meetings.filter(m=>m.id!==id);saveData();render()}
+function resetAll(){
+  if(!isAdmin())return;
+  document.getElementById("modalArea").innerHTML=`<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal"><h3>⚠️ Reset All Data</h3><p style="font-size:13px;color:var(--mintDim);margin-bottom:16px">This will permanently delete all meeting data. This cannot be undone.</p><div class="modal-btns"><button class="hdr-btn" style="background:transparent;color:var(--mintDim);border-color:var(--border)" onclick="closeModal()">Cancel</button><button class="hdr-btn" style="background:var(--redDim);color:var(--redText);border-color:rgba(239,68,68,0.4)" onclick="confirmReset()">Yes, Reset Everything</button></div></div></div>`;
+}
+function confirmReset(){meetings=[];saveData();closeModal();render()}
+
+/* ══════ EXPORT ══════ */
+function exportExcel(){
+  if(meetings.length===0){alert("No meetings to export.");return}
+  const lh=["Date Booked","Date Scheduled","Rep","Firm","Persona","Meeting Type","Points","Status","IR Converted","Role"];
+  const lr=[...meetings].sort((a,b)=>new Date(a.dateBooked||a.date)-new Date(b.dateBooked||b.date)).map(m=>{const isSDR=SDRS.includes(m.bookedBy);let team="";if(!isSDR){const ti=TEAMS.findIndex(t=>t.members.some(mem=>mem.name===m.bookedBy));team=ti>=0?teamDisplayName(ti):""}return[m.dateBooked||m.date||"",m.dateScheduled||"",m.bookedBy,m.firm,m.persona,m.meetingType,calcPts(m),m.status,m.meetingType==="IR"?(m.irConverted?"Yes":"No"):"",isSDR?"SDR":`AE (${team})`]});
+  const sh=["SDR","Qualified Meetings","Points","Gate Hit","Sets of 5","Payout"],sr=SDRS.map(n=>{const s=calcSDR(n);return[n,s.countable,s.pts,s.gate?"Yes":"No",s.sets,s.payout]});
+  const ah=["Team","Member","Tag","Meetings","Points","Mtg Share %","Gate Hit","Balance Pass","Eligible","Team Total"],ar=[];
+  TEAMS.forEach((t,ti)=>{const tc=calcTeam(t,ti);tc.members.forEach((m,i)=>{const sh2=tc.teamMeetings>0?(m.meetings/tc.teamMeetings*100).toFixed(1):"0";ar.push([i===0?tc.name:"",m.name,m.tag,m.meetings,m.pts,sh2+"%",i===0?(tc.gate?"Yes":"No"):"",i===0?(tc.balance?"Yes":"No"):"",i===0?(tc.eligible?"Yes":"No"):"",i===0?tc.teamPts:""])})});
+  const wb=XLSX.utils.book_new();
+  const ws1=XLSX.utils.aoa_to_sheet([lh,...lr]);ws1["!cols"]=[{wch:12},{wch:12},{wch:20},{wch:28},{wch:10},{wch:10},{wch:7},{wch:10},{wch:12},{wch:12},{wch:14}];
+  const ws2=XLSX.utils.aoa_to_sheet([sh,...sr]);ws2["!cols"]=[{wch:16},{wch:18},{wch:8},{wch:10},{wch:10},{wch:10}];
+  const ws3=XLSX.utils.aoa_to_sheet([ah,...ar]);ws3["!cols"]=[{wch:10},{wch:20},{wch:6},{wch:10},{wch:8},{wch:10},{wch:10},{wch:12},{wch:10},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,ws1,"Meeting Log");XLSX.utils.book_append_sheet(wb,ws2,"SDR Leaderboard");XLSX.utils.book_append_sheet(wb,ws3,"AE Leaderboard");
+  XLSX.writeFile(wb,`Pipeline_Blitz_${new Date().toISOString().split("T")[0]}.xlsx`);
+}
+
+/* ══════ MASTER RENDER ══════ */
+function render(){renderAdminBtn();renderPhase();renderTimeline();renderKPIs();renderRaceTrack();renderForm();renderTabs();renderTabContent()}
+
+/* ══════ INIT ══════ */
+meetings=loadData();settings=loadSettings();render();
+</script>
+</body>
+</html>
