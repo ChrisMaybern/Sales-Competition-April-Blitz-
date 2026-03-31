@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>April Pipeline Blitz 2026 — FAQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00C96B;
+    --dark: #0A1F13;
+    --mid: #1A3D26;
+    --yellow: #F5C400;
+    --red: #E8354A;
+    --white: #FFFFFF;
+    --off-white: #F3F8F5;
+    --text: #192E1F;
+    --muted: #5A7A65;
+    --border: #D5EAE0;
+    --card: #FFFFFF;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Barlow', sans-serif; background: var(--off-white); color: var(--text); line-height: 1.6; }
+
+  .header { background: var(--dark); padding: 52px 72px 44px; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 100% 50%, rgba(0,201,107,0.08) 0%, transparent 60%), radial-gradient(ellipse 40% 60% at 0% 100%, rgba(0,100,50,0.15) 0%, transparent 60%); pointer-events: none; }
+  .header::after { content: 'FAQ'; position: absolute; right: 60px; top: -20px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 220px; color: rgba(255,255,255,0.025); line-height: 1; pointer-events: none; letter-spacing: -0.04em; }
+  .header-inner { position: relative; z-index: 1; max-width: 1000px; }
+  .eyebrow { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
+  .header h1 { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(40px, 6vw, 64px); text-transform: uppercase; letter-spacing: -0.01em; color: #fff; line-height: 1; margin-bottom: 14px; }
+  .header h1 span { color: var(--green); }
+  .header-sub { font-size: 15px; color: rgba(255,255,255,0.5); max-width: 640px; line-height: 1.6; margin-bottom: 24px; }
+  .search-wrap { position: relative; max-width: 440px; }
+  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.3); font-size: 14px; pointer-events: none; }
+  .search-bar { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 11px 16px 11px 38px; width: 100%; color: #fff; font-family: 'Barlow', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; }
+  .search-bar::placeholder { color: rgba(255,255,255,0.3); }
+  .search-bar:focus { border-color: var(--green); background: rgba(255,255,255,0.09); }
+
+  .stats-bar { background: var(--mid); padding: 14px 72px; display: flex; gap: 40px; flex-wrap: wrap; border-bottom: 1px solid rgba(0,201,107,0.15); }
+  .stat { display: flex; align-items: center; gap: 10px; }
+  .stat-num { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 22px; color: var(--green); line-height: 1; }
+  .stat-label { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.3; }
+  .stat-divider { width: 1px; height: 28px; background: rgba(255,255,255,0.08); }
+
+  .body-wrap { max-width: 1060px; margin: 0 auto; padding: 48px 32px 100px; }
+
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 22px 26px; margin-bottom: 44px; display: flex; gap: 20px; align-items: flex-start; }
+  .toc-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); white-space: nowrap; margin-top: 2px; flex-shrink: 0; }
+  .toc-links { display: flex; flex-wrap: wrap; gap: 7px; }
+  .toc-link { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); text-decoration: none; background: var(--off-white); border: 1px solid var(--border); padding: 5px 11px; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+  .toc-link:hover { background: var(--dark); color: var(--green); border-color: var(--dark); }
+
+  .category { margin-bottom: 52px; }
+  .category-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 2px solid var(--dark); scroll-margin-top: 20px; }
+  .cat-icon { width: 36px; height: 36px; background: var(--dark); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+  .cat-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 22px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--dark); }
+  .cat-count { margin-left: auto; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: var(--off-white); border: 1px solid var(--border); padding: 3px 10px; border-radius: 20px; }
+
+  .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; transition: box-shadow 0.2s, border-color 0.2s; }
+  .faq-item:hover { box-shadow: 0 2px 14px rgba(0,0,0,0.06); }
+  .faq-item.open { border-color: rgba(0,201,107,0.35); box-shadow: 0 2px 14px rgba(0,201,107,0.08); }
+  .faq-item.hidden { display: none; }
+  .faq-q { padding: 15px 18px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; user-select: none; transition: background 0.15s; }
+  .faq-q:hover { background: #fafcfb; }
+  .faq-item.open .faq-q { background: rgba(0,201,107,0.03); }
+  .q-badge { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 10px; letter-spacing: 0.1em; color: var(--green); background: rgba(0,201,107,0.1); border-radius: 3px; padding: 2px 7px; flex-shrink: 0; margin-top: 2px; min-width: 36px; text-align: center; }
+  .q-text { font-weight: 600; font-size: 14px; color: var(--text); flex: 1; line-height: 1.45; }
+  .q-toggle { font-size: 20px; color: var(--green); flex-shrink: 0; transition: transform 0.25s; line-height: 1; font-weight: 300; }
+  .faq-item.open .q-toggle { transform: rotate(45deg); }
+  .faq-a { display: none; padding: 4px 18px 18px 64px; border-top: 1px solid var(--border); }
+  .faq-item.open .faq-a { display: block; }
+  .faq-a p { font-size: 14px; color: #2E4A37; line-height: 1.7; margin-bottom: 10px; }
+  .faq-a p:last-child { margin-bottom: 0; }
+
+  .verdict { display: inline-flex; align-items: center; gap: 5px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 10px; border-radius: 3px; margin: 10px 0 8px; }
+  .v-yes { background: rgba(0,201,107,0.12); color: var(--green); }
+  .v-no { background: rgba(232,53,74,0.1); color: var(--red); }
+  .v-cond { background: rgba(245,196,0,0.12); color: #9A7C00; }
+  .v-note { background: rgba(10,31,19,0.08); color: var(--dark); }
+
+  .ex { background: var(--off-white); border-left: 3px solid var(--green); padding: 10px 14px; border-radius: 0 5px 5px 0; margin: 8px 0; font-size: 13px; color: #2E4A37; line-height: 1.65; }
+  .ex.ex-no { border-left-color: var(--red); }
+  .ex.ex-warn { border-left-color: var(--yellow); }
+  .ex strong { color: var(--dark); }
+
+  .note { background: rgba(0,201,107,0.05); border: 1px solid rgba(0,201,107,0.2); border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 13px; color: #1A3D26; line-height: 1.6; }
+  .note.note-warn { background: rgba(245,196,0,0.05); border-color: rgba(245,196,0,0.25); color: #5A4400; }
+  .note.note-red { background: rgba(232,53,74,0.05); border-color: rgba(232,53,74,0.2); color: #5A0A12; }
+
+  #no-results { display: none; text-align: center; padding: 60px 20px; color: var(--muted); font-size: 15px; }
+
+  .footer { background: var(--dark); padding: 28px 72px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer p { font-size: 12px; color: rgba(255,255,255,0.3); }
+  .footer-brand { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(0,201,107,0.5); }
+
+  @media (max-width: 640px) {
+    .header { padding: 32px 20px 28px; }
+    .stats-bar { padding: 12px 20px; gap: 20px; }
+    .body-wrap { padding: 28px 16px 60px; }
+    .faq-a { padding-left: 18px; }
+    .toc { flex-direction: column; gap: 10px; }
+    .footer { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="eyebrow">Maybern Sales · Internal Use Only · April 2026</div>
+    <h1>April Pipeline Blitz<br><span>FAQ & Edge Cases</span></h1>
+    <p class="header-sub">Pre-emptive answers to every "what if" question. Read this before you ask. When something isn't covered here — ask Christopher or Riley before you book, not after.</p>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-bar" type="text" id="search" placeholder="Search any question..." oninput="filterFAQs(this.value)" autocomplete="off" />
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num">10</div><div class="stat-label">Categories<br>covered</div></div>
+  <div class="stat-divider"></div>
+  <div class="stat"><div class="stat-num">41+</div><div class="stat-label">Edge cases<br>answered</div></div>
+  <div class="stat-divider"></div>
+  <div class="stat"><div class="stat-num">Apr 1</div><div class="stat-label">Window<br>opens</div></div>
+  <div class="stat-divider"></div>
+  <div class="stat"><div class="stat-num">May 16</div><div class="stat-label">Payout<br>date</div></div>
+</div>
+
+<div class="body-wrap">
+
+  <div class="toc">
+    <div class="toc-label">Jump to</div>
+    <div class="toc-links">
+      <a href="#general" class="toc-link">General Rules</a>
+      <a href="#icp" class="toc-link">ICP & Firm Eligibility</a>
+      <a href="#personas" class="toc-link">Personas & IR</a>
+      <a href="#meeting-types" class="toc-link">Meeting Types</a>
+      <a href="#territory" class="toc-link">Territory & Assignment</a>
+      <a href="#pipeline" class="toc-link">Existing Pipeline</a>
+      <a href="#scoring" class="toc-link">Points & Scoring</a>
+      <a href="#sdr-rules" class="toc-link">SDR Bonus</a>
+      <a href="#ae-rules" class="toc-link">AE Team Rules</a>
+      <a href="#tracking" class="toc-link">Tracking & Payout</a>
+    </div>
+  </div>
+
+  <div id="no-results">No FAQs matched your search. Try different keywords or ask Christopher directly.</div>
+
+  <!-- GENERAL RULES -->
+  <div class="category" id="general">
+    <div class="category-header"><div class="cat-icon">📋</div><div class="cat-title">General Rules</div><div class="cat-count">7 questions</div></div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">G1</span><span class="q-text">How do the two competitions relate to each other?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">Fully Separate — No Crossover</div>
+        <p>The SDR and AE competitions are completely independent. SDR meetings do not contribute to AE team totals — not for points, not as a tiebreaker, not in any scenario. AE-sourced meetings do not affect SDR counts. The two competitions run in parallel and share only the ICP criteria, booking window, and acceptance deadline.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">G2</span><span class="q-text">What is the booking window exactly?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">April 1–30 · 22 Business Days</div>
+        <p>The calendar invite must be sent during April 1–30. The meeting must also be <strong>scheduled to take place on or before May 14</strong> and accepted by the prospect before May 14. April starts on a Wednesday, giving you 22 business days.</p>
+        <div class="ex"><strong>✓ Valid:</strong> Meeting booked April 22, scheduled for May 10, accepted April 25. Counts.</div>
+        <div class="ex ex-no"><strong>✕ Invalid:</strong> Meeting booked March 28 for an April date. Outside the booking window.</div>
+        <div class="ex ex-no"><strong>✕ Invalid:</strong> Meeting booked April 28, scheduled for May 20. Scheduled date is after May 14 — excluded.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">G3</span><span class="q-text">Does the meeting itself have to take place before April 30?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">No — But Must Be Scheduled By May 14</div>
+        <p>The meeting does not have to take place in April, but it must be scheduled (on the calendar) for no later than May 14. Booking in April for a May 20 meeting does not count — the scheduled date must fall within the window.</p>
+        <div class="ex"><strong>✓ Valid window:</strong> Booked April 1–30 · Scheduled May 1–14 · Accepted before May 14.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">G4</span><span class="q-text">What happens if a prospect cancels after May 14?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">Does Not Count</div>
+        <p>The meeting must be accepted and scheduled before May 14. An outright cancellation after the deadline removes it from the count. A reschedule to a date that still falls on or before May 14 where the prospect remains committed is fine — a reschedule pushed past May 14 is treated the same as a cancellation.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">G5</span><span class="q-text">What if the prospect no-shows but wants to reschedule?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-yes">Counts — Reschedule Is Still the Same Meeting</div>
+        <p>A no-show followed by a reschedule still counts as the same M1, as long as the rescheduled meeting gets accepted by May 14. The original booking date is what matters. Reps should not be penalized for a prospect's no-show.</p>
+        <div class="ex ex-no"><strong>✕ Does not count:</strong> Prospect no-shows, reschedules, but never formally accepts the new time by May 14.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">G6</span><span class="q-text">Who resolves disputes at payout?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">Christopher & Riley — Final Decision</div>
+        <p>Christopher and Riley validate all meetings for ICP and persona fit before bonuses are processed on May 16. Disputes are resolved within 48 hours. Their decision is final. When in doubt about whether something qualifies — ask before you book, not at payout.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">G7</span><span class="q-text">What if a prospect reaches out to us — does an inbound meeting count?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">Default: No — Inbounds Do Not Count</div>
+        <p>If a prospect contacts Maybern on their own initiative with no prior outreach from the rep during the competition window, the meeting does not count. Passive inbounds are not pipeline building — they're order taking.</p>
+        <p><strong>The one exception — outreach-triggered inbound:</strong> If a rep can demonstrate that their own outreach sent during April directly prompted the prospect to respond inbound, the meeting may count. This is reviewed case-by-case by Christopher at payout. The rep must be able to show the Salesforce activity — email, call log, LinkedIn message — with a timestamp that connects the April outreach to the inbound response.</p>
+        <div class="ex ex-no"><strong>✕ Marketing-generated inbound:</strong> Prospect responds to a Maybern email campaign, webinar, or any marketing activity. Never counts — no exceptions.</div>
+        <div class="ex ex-no"><strong>✕ Pre-window outreach:</strong> Rep reached out in March (or earlier) and the prospect responds in April. Does not count. The outreach that triggered the inbound must have been sent during April.</div>
+        <div class="ex"><strong>✓ Outreach-triggered inbound:</strong> Rep sends a cold email on April 8. Prospect replies April 10 saying they're interested and wants to meet. Rep books the meeting. Documented in Salesforce. May count — subject to Christopher's review at payout.</div>
+        <div class="note note-warn">If a prospect responds to another rep's outreach and a different rep books the meeting — the rep who booked it gets the credit. Extreme edge cases at Christopher's discretion.</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="category" id="icp">
+    <div class="category-header"><div class="cat-icon">🏢</div><div class="cat-title">ICP & Firm Eligibility</div><div class="cat-count">8 questions</div></div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">I1</span><span class="q-text">What is the ICP for this competition?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">4 Requirements — All Must Be Met</div>
+        <div class="ex"><strong>1.</strong> Private equity GP managing closed-end fund structures<br><strong>2.</strong> U.S.-domiciled — HQ or primary operations in the U.S.<br><strong>3.</strong> $1B+ AUM at the firm level (not individual fund level)<br><strong>4.</strong> Closed-end fund vehicles — not evergreen or open-end</div>
+        <p>All four must be true. Three out of four does not qualify.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">I2</span><span class="q-text">Does venture capital qualify?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">Never — VC Is Explicitly Excluded</div>
+        <p>Venture capital is disqualified regardless of AUM. A $10B VC firm does not qualify. Maybern solves closed-end waterfall calculation — VC doesn't run that structure. There are no exceptions to this rule.</p>
+        <div class="ex ex-no"><strong>✕ Does not qualify:</strong> Any firm whose primary fund strategy is venture, early-stage, or seed — regardless of size.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">I3</span><span class="q-text">Do open-end or evergreen fund structures qualify?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">No — Closed-End Only</div>
+        <p>Open-end and evergreen structures are disqualified. This includes hedge funds, which have no closed-end waterfall. The product requires closed-end fund mechanics to be relevant.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">I4</span><span class="q-text">What if the firm is primarily VC but has a small PE or closed-end arm?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">Does Not Qualify</div>
+        <p>If the firm's primary structure is VC, it doesn't qualify — even with a PE sleeve. The firm's dominant fund strategy must be closed-end PE. A VC firm with a side buyout vehicle is still a VC firm.</p>
+        <div class="ex"><strong>✓ Qualifies:</strong> PE/buyout firm whose primary program is closed-end funds at $1B+ AUM.</div>
+        <div class="ex ex-no"><strong>✕ Does not qualify:</strong> VC firm with $6B AUM that recently launched its first small buyout vehicle.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">I5</span><span class="q-text">The firm is foreign-headquartered but has a significant U.S. office — does it qualify?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-cond">Only If Primary GP Entity Is U.S.-Based</div>
+        <p>U.S.-domiciled means the GP entity is incorporated or primarily operating in the U.S. A U.S. satellite office of a London-headquartered GP does not qualify. If the primary GP entity and fund management operations are U.S.-based, it qualifies even with international offices.</p>
+        <div class="note note-warn">When in doubt, check with Christopher before booking. Don't assume — U.S. domicile applies to the GP entity, not where individual partners happen to sit.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">I6</span><span class="q-text">What if the firm's AUM isn't publicly confirmed?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-cond">Yes — With a Documented Source</div>
+        <p>You don't need an audited figure. Use Preqin, PitchBook, the firm's own website, or press releases. Log the source in Salesforce. If it gets challenged at ICP review, you need to show where the number came from.</p>
+        <div class="note note-warn">If you genuinely can't confirm $1B+ from any available source, ask Christopher first. Don't book and hope.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">I7</span><span class="q-text">Same parent firm, different fund entity with a separate finance team — do both count?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-yes">Yes — If Separate Entity, Separate Finance Team, No Open Pipeline</div>
+        <p>Different fund entities with genuinely independent finance teams are treated as separate prospects. A meeting with Entity B's Controller counts even if there's existing pipeline at Entity A — as long as Entity B has no active Salesforce opportunity.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">I8</span><span class="q-text">What about family offices?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-cond">Only If Structured as a Genuine PE GP</div>
+        <p>Family offices are excluded unless they operate as a genuine PE GP with closed-end fund vehicles, LP relationships, and waterfall distributions at $1B+ AUM. A family office that simply manages a portfolio does not qualify.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERSONAS & IR -->
+  <div class="category" id="personas">
+    <div class="category-header"><div class="cat-icon">👤</div><div class="cat-title">Personas & IR</div><div class="cat-count">7 questions</div></div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">P1</span><span class="q-text">Who are the qualified personas?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">Qualifies or Doesn't — No Tiers</div>
+        <div class="ex"><strong>✓ Qualifies (1 pt each):</strong> Controller / Fund Controller · VP of Finance · VP of Fund Accounting · CFO / Head of Finance · COO / Head of Operations · Any role that clearly owns fund calculation, waterfall governance, or finance leadership<br><br><strong>✕ Does not qualify (0 pts):</strong> Any IR function · LP Communications · Marketing · Business Development · Anyone who doesn't own the fund calculation or reporting workflow</div>
+        <p>It's binary — a contact either owns or directly influences the fund calculation and reporting workflow, or they don't. If they do, they qualify. If they don't, they don't count.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">P2</span><span class="q-text">The title doesn't exactly match — how do I know if the contact qualifies?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-cond">Function Wins Over Title</div>
+        <p>If the person's actual responsibilities clearly match a Tier 1 or Tier 2 function — fund accounting oversight, waterfall governance, finance leadership — they qualify regardless of exact title. Christopher and Riley make the call at ICP review.</p>
+        <div class="ex"><strong>✓ Likely qualifies:</strong> "Director of Fund Finance" · "Head of Accounting" · "Managing Director, Finance" — function maps to fund calculation or finance leadership</div>
+        <div class="ex ex-no"><strong>✕ Does not qualify:</strong> "Director of Investor Relations" · "Head of LP Communications" · Any IR function regardless of title</div>
+        <div class="note note-warn">Ambiguous title? Slack Christopher before booking. A disqualified meeting can drop you below the bonus threshold.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">P3</span><span class="q-text">Does Investor Relations — or any other non-qualified title — count?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">No — 0 Points</div>
+        <p>IR and any other non-qualified title earns 0 points. This is the same rule for every non-qualified contact — there are no special IR pathways, retroactive credits, or referral mechanics. If the person on the call doesn't own the fund calculation or reporting workflow, the meeting scores 0.</p>
+        <div class="note note-red"><strong>Do not book meetings with non-qualified titles expecting them to count.</strong> They will be removed at ICP review.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">P4</span><span class="q-text">Is there any exception for non-qualified titles?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-cond">One Exception — Qualified Persona on the Same Call</div>
+        <p>If a non-qualified contact brings a qualified persona (Controller, VP Finance, CFO, COO) <strong>onto the same call</strong>, that qualified person scores 1 point. The non-qualified contact still scores 0.</p>
+        <div class="ex"><strong>✓ Counts:</strong> IR brings the CFO onto the call → CFO scores 1 point. IR scores 0.</div>
+        <div class="ex ex-no"><strong>✕ Does not count:</strong> IR meeting with no qualified persona present → 0 points, full stop.</div>
+        <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+        <p><strong style="color:var(--text);">Retroactive credit edge case:</strong> If you book a meeting with a non-qualified contact and that contact subsequently facilitates a separate qualified meeting at the same firm — booked before April 30 and scheduled by May 14 — the original non-qualified meeting retroactively earns 1 point. This is validated by Christopher at payout. The connection between the two meetings must be genuine and demonstrable.</p>
+        <div class="ex"><strong>Example:</strong> You book IR on April 5. IR personally introduces you to the Controller. You book the Controller meeting April 12. At payout, Christopher confirms the connection — IR retroactively earns 1pt, Controller meeting earns 1pt = 2 points total.</div>
+        <div class="ex ex-no"><strong>Does not qualify:</strong> IR mentions a name, you cold-email that person independently and book them. The IR meeting did not facilitate the booking — no retroactive credit.</div>
+        <div class="note note-warn">Retroactive credit is validated at payout, not during the month. When in doubt, document the connection — Slack Christopher with context so it's on record before April 30.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">P5</span><span class="q-text">You book a CFO meeting and the Controller shows up too — do both count?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">One Calendar Event = One Point</div>
+        <p>One meeting equals one point regardless of how many qualified people attend. CFO + Controller on the same call = 1 point. If you want to count the Controller separately, book them their own dedicated meeting.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">P6</span><span class="q-text">What if a contact gets promoted during April — does their tier change?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">Qualification Status Locked at Time of Booking</div>
+        <p>Whether a contact qualifies is determined at the time the calendar invite is sent. If you booked an IR contact who subsequently gets promoted to CFO, the meeting was booked as an IR meeting and IR rules apply. No retroactive upgrades based on title changes after booking.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">P7</span><span class="q-text">Can you book multiple contacts at the same firm and have each count separately?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-yes">Yes — Different Contacts Count Separately</div>
+        <p>Booking the Controller and the CFO at the same firm = 2 points. Each qualified contact at a qualifying firm is a separate credit, as long as they're genuinely different stakeholders in separate calendar events.</p>
+        <div class="ex ex-no"><strong>✕ Does not count twice:</strong> Booking the same person twice at the same firm. One contact, one credit.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEETING TYPES -->
+  <div class="category" id="meeting-types">
+    <div class="category-header"><div class="cat-icon">📅</div><div class="cat-title">Meeting Types</div><div class="cat-count">5 questions</div></div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">MT1</span><span class="q-text">What meeting types count for the Blitz?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">Official Sales Stages Only</div>
+        <p>Meetings must align with official Maybern sales methodology stages and be logged against a formal Salesforce activity type.</p>
+        <div class="ex"><strong>✓ Count:</strong> Initial Call (M1) · Initial Demo (M2) · Coordination Meeting (M3) · Value Creation (M4) · Tech File Review (M5) · Process Review (M6) · and subsequent official stage meetings</div>
+        <div class="ex ex-no"><strong>✕ Do not count:</strong> "Catch-up" · "Coffee" · "Quick sync" · "Reconnect" · "Informal intro" · Any meeting not logged against a formal Salesforce activity type</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">MT2</span><span class="q-text">Can a rep change the meeting type after the fact to claim more points?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">No — Meeting Type Locked at Booking</div>
+        <p>The Salesforce activity type logged at time of booking is what counts. Retroactively changing a meeting type is not allowed and will be flagged at ICP review. If you ran a long Initial Call that covered demo content, it's still 1 point.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">MT3</span><span class="q-text">What if one call covers both M1 and M2 content in a single session?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">One Event = One Point</div>
+        <p>You cannot claim two meetings from one calendar event. One 90-minute session covering Initial Call and Initial Demo content = 1 point. Book two separate meetings if you want two credits.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">MT4</span><span class="q-text">Do SDRs book M2+ meetings?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">No — SDRs Book M1s Only</div>
+        <p>SDRs are responsible for booking Initial Calls (M1) only. The 1.5x momentum multiplier is an AE-only mechanic. SDRs earn 1 point per qualified M1 booked — that's the full scope of the SDR competition.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">MT5</span><span class="q-text">What qualifies as a legitimate M2 for the AE multiplier?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-cond">Genuine Next Step — Not a Rebook</div>
+        <p>An M2 must represent a genuine progression in the sales cycle — an Initial Demo, a Coordination Meeting, a deeper discovery session with additional stakeholders. The original M1 must have taken place or been genuinely accepted before M2 earns the multiplier.</p>
+        <div class="ex ex-no"><strong>✕ Not an M2:</strong> Rebooking the same Initial Call because the prospect no-showed. That's still an M1 rescheduled.</div>
+        <div class="ex ex-no"><strong>✕ Will be flagged:</strong> Booking M1 and M2 on the same day before M1 has occurred. M2 must be a genuine next step, not a same-day double-book.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERRITORY & ASSIGNMENT -->
+  <div class="category" id="territory">
+    <div class="category-header"><div class="cat-icon">🗺️</div><div class="cat-title">Territory & Assignment</div><div class="cat-count">5 questions</div></div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">T1</span><span class="q-text">Can SDRs prospect accounts that aren't assigned to any AE?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-yes">Yes — Unassigned Territory Is Fair Game</div>
+        <p>SDRs can and should prospect unassigned territory. If an SDR books a qualified meeting at an unassigned account, the account is assigned to an AE based on geography. For New York-based reps, assignment follows a round robin rotation. The SDR's point counts regardless of how assignment resolves.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">T2</span><span class="q-text">What if an SDR books into an AE's territory that hasn't been touched in months?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-yes">Fair Game — If No Open Pipeline</div>
+        <p>If there is no active opportunity in Salesforce, the account is eligible regardless of territory assignment. Stale territory is unprotected territory. This is a natural forcing function for AEs to keep Salesforce current.</p>
+        <div class="note note-warn">AEs: if an account matters to you, keep it active. An SDR booking into a dormant account is not a violation — it's a gap you left open.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">T3</span><span class="q-text">Two SDRs prospect the same account simultaneously — who gets credit?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">First Calendar Invite Sent Wins</div>
+        <p>The SDR who sends the calendar invite first gets the credit. The duplicate is removed. This is auditable via Salesforce timestamp — no gray area. Speed wins.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">T4</span><span class="q-text">What if the assigned AE refuses to run a meeting the SDR booked?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">SDR's Point Stands — AE Issue Is a Management Matter</div>
+        <p>The SDR did their job. Their point counts regardless. Christopher will assign a replacement AE if possible. AE non-cooperation is a coaching issue — it does not penalize the SDR.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">T5</span><span class="q-text">What if the AE is on PTO when the meeting happens?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">AE's Responsibility to Manage</div>
+        <p>It's the AE's responsibility to reschedule within the window or arrange coverage before going on PTO. If the meeting falls outside the window as a result, it doesn't count. Reps own their calendar management.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXISTING PIPELINE -->
+  <div class="category" id="pipeline">
+    <div class="category-header"><div class="cat-icon">🚫</div><div class="cat-title">Existing Pipeline</div><div class="cat-count">5 questions</div></div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">PL1</span><span class="q-text">What if there's an open opportunity in Salesforce but nobody's touched it in 6 months?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">Ineligible While the Opportunity Is Open</div>
+        <p>If there's an open opportunity in Salesforce — regardless of last activity date — the account is off limits. The rule is simple: open opp = ineligible. Formally close-lose dead opportunities before April 1 if you want the account to be eligible.</p>
+        <div class="note note-warn"><strong>Use this as a forcing function.</strong> Clean up your pipeline before April 1. Close-lose dead opps. It helps forecast accuracy and frees accounts for the Blitz.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">PL2</span><span class="q-text">What about accounts with a closed-lost opportunity from last year?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-yes">Fully Eligible — Closed-Lost Is Fair Game</div>
+        <p>Closed-lost means the opportunity is gone. A new meeting at a previously lost account is legitimate new pipeline activity and absolutely counts. These are often the best accounts to target — they already understand the problem space.</p>
+        <div class="ex"><strong>✓ Pro tip:</strong> Pull your closed-lost accounts from the last 12–18 months. That's a ready-made list for April 1.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">PL3</span><span class="q-text">What if it's an existing Maybern customer?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">Never Counts</div>
+        <p>Meetings with existing Maybern customers are excluded from both competitions. This is about new pipeline — not expansion or customer success activity.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">PL4</span><span class="q-text">An existing customer refers you to a sister firm — does that count?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-yes">Yes — If ICP Qualifies and No Open Pipeline</div>
+        <p>A referral to a separate firm is a new lead. As long as the referred firm independently passes ICP and has no active Salesforce opportunity, it's eligible. Customer referrals are some of the best leads — this behavior should be rewarded.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">PL5</span><span class="q-text">What if I sandbagged meetings from March to book in April?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">Disqualified — Immediate Removal</div>
+        <p>Meetings that were already in motion or committed before April 1 are excluded even if the calendar invite is technically sent on April 1 or later. Christopher and Riley will review for sandbagging at payout. This will be caught.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- POINTS & SCORING -->
+  <div class="category" id="scoring">
+    <div class="category-header"><div class="cat-icon">📊</div><div class="cat-title">Points & Scoring</div><div class="cat-count">8 questions</div></div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">S1</span><span class="q-text">How does the AE momentum multiplier work?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">M1 = 1pt · M2 = 1.5pts · M3+ = 2.25pts</div>
+        <p>AEs earn 1 point for each M1 they personally book. M2 follow-ups earn 1.5 points. M3 and beyond earn 2.25 points each. The multiplier escalates to reward depth — advancing a deal beats spraying first calls.</p>
+        <div class="ex"><strong>AE self-sources M1 + M2 + M3:</strong> 1.0 + 1.5 + 2.25 = 4.75 points from one prospect.<br><strong>vs. 4 separate M1s:</strong> 4.0 points. Going deep beats going wide.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">S2</span><span class="q-text">SDR books M1, AE books M2 — what does each person score?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">SDR: 1pt · AE: 1.5pts on M2 · AE: 2.25pts on M3</div>
+        <p>SDR books M1 = 1 point for the SDR (SDR competition only). AE books M2 = 1.5 points for the AE. AE books M3 = 2.25 points. No shared credit, no crossover between competitions.</p>
+        <div class="ex"><strong>Full sequence:</strong> SDR books M1 (SDR +1pt) → AE books M2 (AE +1.5pts) → AE books M3 (AE +2.25pts). SDR total = 1pt. AE total = 3.75pts.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">S3</span><span class="q-text">Do SDR meetings contribute to the AE team total in any way?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">Never — Not Even in a Tiebreaker</div>
+        <p>SDR-sourced meetings do not feed AE team totals under any circumstances — not for points, not as a tiebreaker, not in any scenario. AE team totals are built exclusively from meetings the AEs personally book.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">S4</span><span class="q-text">One AE books an M1, a different AE books M2 — does the second AE get the 1.5x multiplier?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-yes">Yes — Multiplier Follows the Booker of the Follow-Up</div>
+        <p>The multiplier applies to whoever books the follow-up meeting, regardless of who booked the prior meeting. If the M1 genuinely occurred and the M2 is a legitimate next step, the rep who booked M2 earns 1.5pts. This is the same logic as the SDR → AE handoff.</p>
+        <div class="ex"><strong>Asaf books M1 (Team 2: +1pt) → Gabi books M2 (Team 1: +1.5pts):</strong> Each rep earns credit for what they personally booked. The multiplier is Gabi's because she booked the follow-up.</div>
+        <div class="note note-warn"><strong>The M1 must have actually occurred</strong> before M2 earns the multiplier. You cannot same-day book M1 and M2 at a firm you've never contacted. Manufactured sequences will be flagged at ICP review.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">S5</span><span class="q-text">One AE gives another AE a referral — who gets the points?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">Points Go to Whoever Books the Meeting</div>
+        <p>A referral from a teammate is just a lead. The rep who books the meeting gets the credit — not the rep who passed the name. If Asaf gives Gabi a referral and Gabi books the M1, Gabi gets 1pt and Asaf gets 0.</p>
+        <div class="ex"><strong>Asaf refers a firm to Gabi → Gabi books M1:</strong> Gabi +1pt. Asaf +0.<br><strong>Asaf refers a firm → Gabi books M1 → Gabi books M2:</strong> Gabi gets 1pt (M1) + 1.5pts (M2) = 2.5pts. Asaf gets 0.</div>
+        <div class="note">This applies across teams and within the same team. The booker owns the credit, always.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">S6</span><span class="q-text">Two AE teammates both book meetings at the same firm with different contacts — do both count?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-yes">Yes — Different Contacts Count Separately</div>
+        <p>Partner A books the CFO and Partner B books the Controller at the same firm = 2 points toward the team total. This is exactly the kind of multi-threaded outreach you want to encourage. Coordinate to make sure you're targeting genuinely different stakeholders.</p>
+        <div class="note note-warn">First to book a specific contact gets credit. If both partners accidentally book the same person at the same firm, the duplicate is removed.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">S7</span><span class="q-text">How do fractional points work?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">Round Down for SDR · Count As-Is for AE Teams</div>
+        <p>For SDR bonus payouts, the total point count is rounded down to the nearest whole number before checking the threshold and calculating the payout increment. For AE team competition totals, fractional points count as-is — 10.5 points beats 10.0.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">S8</span><span class="q-text">What is the AE tiebreaker?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">3-Step Ladder</div>
+        <div class="ex"><strong>Step 1:</strong> Most total qualified meetings. Still tied? →<br><strong>Step 2:</strong> Most total opportunity amount created during the window. Still tied? →<br><strong>Step 3:</strong> $6,000 splits evenly — $1,500 per person across both teams.</div>
+        <p>No other tiebreaker metrics apply. AUM tiers, geography, and any other criteria are not used.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SDR BONUS -->
+  <div class="category" id="sdr-rules">
+    <div class="category-header"><div class="cat-icon">⚡</div><div class="cat-title">SDR Bonus Rules</div><div class="cat-count">4 questions</div></div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">SDR1</span><span class="q-text">I hit 9 meetings but 2 get disqualified at ICP review — I'm now at 7. Do I lose the whole bonus?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">Yes — Below Gate, No Bonus</div>
+        <p>7 is below the 8-meeting threshold. The bonus does not activate. This is the harshest outcome in the competition and it's intentional — the gate exists to enforce quality, not just volume.</p>
+        <div class="note note-red"><strong>The most important rule to internalize before April 1:</strong> Do not book gray-area accounts hoping they'll pass ICP review. One disqualified meeting at 8 or 9 can eliminate your entire bonus. When in doubt — ask Christopher before you book, not after.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">SDR2</span><span class="q-text">I hit the threshold but I'm leaving the company before May 16 payout — do I still get paid?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-yes">Yes — Earned Comp Is Paid</div>
+        <p>You earned it in April, you get paid on May 16 regardless of employment status at payout date. The work was done and the results are validated. Earned compensation is not forfeited due to departure timing.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">SDR3</span><span class="q-text">I have 13 meetings — do I get credit for the extra 3 above the 10?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">No — Increments of 5 Only, No Partial Credit</div>
+        <p>Bonuses pay in clean increments of 5. 13 meetings pays like 10 ($2,000). The extra 3 don't roll forward or pro-rate. Push to 15 to hit the next $1,000 increment.</p>
+        <div class="ex"><strong>Full payout table:</strong> 1–7 = $0 · 8–9 = $1,000 · 10–14 = $2,000 · 15–19 = $3,000 · 20–24 = $4,000 · 25+ = +$1K per 5</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">SDR4</span><span class="q-text">Is there a cap on SDR earnings?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-yes">No Cap</div>
+        <p>There is no ceiling on the SDR individual bonus. Every 5 qualified meetings above the threshold adds $1,000. 25 meetings = $5,000. 30 = $6,000. Book clean, book fast, keep going.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AE TEAM RULES -->
+  <div class="category" id="ae-rules">
+    <div class="category-header"><div class="cat-icon">🏆</div><div class="cat-title">AE Team Rules</div><div class="cat-count">5 questions</div></div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">AE1</span><span class="q-text">How does the 65/35 balance rule work?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">Neither Partner Can Exceed 65% of Team Total</div>
+        <p>If one partner accounts for more than 65% of the team's total qualified meetings, the team is disqualified — regardless of total count. Both partners must contribute meaningfully.</p>
+        <div class="ex"><strong>Team books 10:</strong> 6/4 (60/40) ✓ · 7/3 (70/30) ✕ disqualified<br><strong>Team books 12:</strong> 7/5 (58/42) ✓ · 8/4 (67/33) ✕ disqualified<br><strong>Team books 8:</strong> 5/3 (62.5/37.5) ✓</div>
+        <div class="note note-warn">Check your split at the April 15 leaderboard. If one partner is over 65%, you have two weeks to rebalance.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">AE2</span><span class="q-text">One AE on a team has PTO for two weeks — is there any accommodation to the 65/35 rule?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">No Accommodation</div>
+        <p>Teams are assigned knowing the full month of April is the window. Planned PTO needs to be front-loaded or discussed with Christopher before the competition starts. The 65/35 rule doesn't flex for scheduled absences.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">AE3</span><span class="q-text">What if an AE has a genuine personal emergency mid-competition?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-cond">Case-by-Case — Christopher Decides</div>
+        <p>A genuine unforeseen emergency is handled by Christopher on a case-by-case basis with compassion. This is not in the written rules — it's a judgment call reserved for true emergencies. Planned absences and scheduling inconveniences do not qualify.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">AE4</span><span class="q-text">Both AE partners accidentally prospect the same account — what happens?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">First to Book Gets Credit — Duplicate Removed</div>
+        <p>The first calendar invite sent gets the credit. The duplicate is removed from the count. This is why AE partners need to coordinate outreach — doubling up wastes effort and costs your team a point.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">AE5</span><span class="q-text">An AE directs or asks an SDR to prospect specific accounts for them — what happens?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-no">AE Team Disqualified — Zero Tolerance</div>
+        <p>No AE may direct, instruct, or arrange with an SDR to prospect specific accounts on their behalf. Any such arrangement results in immediate disqualification of the AE team. The SDR keeps all their points. The consequence falls entirely on the AE.</p>
+        <div class="note note-red"><strong>This includes:</strong> asking an SDR to "focus on" certain accounts, coaching SDR outreach to benefit your AE territory, or any arrangement where the SDR's prospecting is shaped by AE direction rather than genuine ICP fit.</div>
+        <div class="note">SDRs: if an AE pressures you to prospect on their behalf, flag it to Christopher immediately. You will not be penalized.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRACKING & PAYOUT -->
+  <div class="category" id="tracking">
+    <div class="category-header"><div class="cat-icon">📈</div><div class="cat-title">Tracking & Payout</div><div class="cat-count">4 questions</div></div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">TR1</span><span class="q-text">What's the Salesforce logging requirement?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">Log Within 24 Hours</div>
+        <p>Every meeting must be logged in Salesforce within 24 hours of booking. Meetings logged after May 14 are excluded entirely. Salesforce is the source of truth — if it's not logged, it doesn't exist for Blitz purposes.</p>
+        <div class="note note-warn">Log every meeting the day you book it. Don't batch-log at the end of the week. A missed log can cost you a point you legitimately earned.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">TR2</span><span class="q-text">How does the leaderboard work?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">Weekly in Slack · Pending Until Accepted</div>
+        <p>The leaderboard is updated weekly in Slack. SDR individual counts and all 3 AE team standings are visible to the full team. Booked meetings show as "pending" until the prospect accepts. A mid-month check-in is published on April 15 showing standings at the halfway point.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">TR3</span><span class="q-text">When are bonuses processed and how are disputes handled?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">May 16 · Disputes Within 48 Hours</div>
+        <p>Final count and ICP review is completed on May 16. Bonuses are announced and processed that day. If you believe a meeting was incorrectly excluded, disputes are resolved within 48 hours. Christopher and Riley's decision is final.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge">TR4</span><span class="q-text">Can rules change mid-competition?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-cond">Only With 48 Hours Notice — Never Retroactive</div>
+        <p>Christopher reserves the right to adjust rules with 48 hours notice if an unforeseen edge case arises that isn't covered here. Any change will be communicated to the full team simultaneously and will apply from the date of notice forward — never retroactively.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" style="border-color:rgba(0,201,107,0.3);background:rgba(0,201,107,0.02)">
+      <div class="faq-q" onclick="toggle(this)"><span class="q-badge" style="background:rgba(0,201,107,0.15)">TR5</span><span class="q-text">What happens if something comes up that isn't covered anywhere in this FAQ?</span><span class="q-toggle">+</span></div>
+      <div class="faq-a">
+        <div class="verdict v-note">Christopher's Discretion — Final and Binding</div>
+        <p>Any edge case, scenario, or situation not explicitly addressed in this document is subject to Christopher's sole discretion. All rulings will be made fairly and objectively, with one guiding principle: does this align with the spirit of the competition?</p>
+        <div class="ex"><strong>The spirit of the competition is:</strong> Build real, qualified pipeline with prospects Maybern can genuinely win. Any activity that serves that goal in good faith will be viewed favorably. Any activity that games the structure, inflates numbers, or circumvents the intent of the rules will not.</div>
+        <div class="note">Christopher's ruling on any uncovered edge case is final. Rulings will be communicated to the full team when relevant so everyone benefits from the clarification. When in doubt — ask before you act, not after.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="footer-brand">Maybern Sales</div>
+  <p>April Pipeline Blitz 2026 · Internal Use Only · Prepared by RevOps</p>
+  <p>Anything not covered here is subject to Christopher's discretion — ruled fairly, objectively, and in the spirit of the competition.</p>
+</div>
+
+<script>
+  function toggle(el) {
+    const item = el.closest('.faq-item');
+    item.classList.toggle('open', !item.classList.contains('open'));
+  }
+
+  function filterFAQs(query) {
+    const q = query.toLowerCase().trim();
+    const items = document.querySelectorAll('.faq-item');
+    const categories = document.querySelectorAll('.category');
+    let anyVisible = false;
+
+    items.forEach(item => {
+      const match = !q || item.textContent.toLowerCase().includes(q);
+      item.classList.toggle('hidden', !match);
+      if (match) anyVisible = true;
+    });
+
+    categories.forEach(cat => {
+      const visible = cat.querySelectorAll('.faq-item:not(.hidden)');
+      cat.style.display = visible.length > 0 ? '' : 'none';
+    });
+
+    document.getElementById('no-results').style.display = anyVisible ? 'none' : 'block';
+
+    if (q) {
+      items.forEach(item => { if (!item.classList.contains('hidden')) item.classList.add('open'); });
+    } else {
+      items.forEach(item => item.classList.remove('open'));
+    }
+  }
+
+  document.querySelectorAll('.toc-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
